@@ -1,0 +1,394 @@
+{
+ "logos": [
+  {
+   "name": "Aelous",
+   "logo": "2024/09/Aelous.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Amberstone",
+   "logo": "2024/09/Amberstone.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Annaite",
+   "logo": "2024/09/Annaite.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Arisun",
+   "logo": "2024/09/Arisun.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Ascenso",
+   "logo": "2024/09/Ascenso.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Barum",
+   "logo": "2024/09/Barum.png",
+   "brand": "Barum",
+   "count": 423
+  },
+  {
+   "name": "Boto",
+   "logo": "2024/09/Boto.png",
+   "brand": "Boto",
+   "count": 4
+  },
+  {
+   "name": "Continental",
+   "logo": "2024/09/Continental.png",
+   "brand": "Continental",
+   "count": 897
+  },
+  {
+   "name": "Cultor",
+   "logo": "2024/09/Cultor.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Dunlop",
+   "logo": "2024/09/Dunlop.png",
+   "brand": "Dunlop",
+   "count": 233
+  },
+  {
+   "name": "Fulda",
+   "logo": "2024/09/Fulda-tyres.png",
+   "brand": "Fulda",
+   "count": 246
+  },
+  {
+   "name": "Golden Crown",
+   "logo": "2024/09/Golden-Crown-tyres.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Goodride",
+   "logo": "2024/09/Goodride.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Goodyear",
+   "logo": "2024/09/Goodyear.png",
+   "brand": "Goodyear",
+   "count": 585
+  },
+  {
+   "name": "Gripmax",
+   "logo": "2024/09/Gripmax.png",
+   "brand": "Gripmax",
+   "count": 7
+  },
+  {
+   "name": "Kabat",
+   "logo": "2024/09/Kabat-tyres.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Kama",
+   "logo": "2024/09/Kama.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Kelly",
+   "logo": "2024/09/Kelly-tires.png",
+   "brand": "Kelly",
+   "count": 17
+  },
+  {
+   "name": "Longmarch",
+   "logo": "2024/09/Longmarch.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Marris",
+   "logo": "2024/09/Marris-tyres.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Matador",
+   "logo": "2024/09/Matador.png",
+   "brand": "Matador",
+   "count": 34
+  },
+  {
+   "name": "Michelin",
+   "logo": "2024/09/Michelin.png",
+   "brand": "Michelin",
+   "count": 127
+  },
+  {
+   "name": "Mitas",
+   "logo": "2024/09/Mitas-tyres.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Nankang",
+   "logo": "2024/09/Nankang.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Nexen",
+   "logo": "2024/09/Nexen-tire.png",
+   "brand": "Nexen",
+   "count": 394
+  },
+  {
+   "name": "Orium",
+   "logo": "2024/09/Orium.png",
+   "brand": "Orium",
+   "count": 5
+  },
+  {
+   "name": "Petlas",
+   "logo": "2024/09/Petlas.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Pirelli",
+   "logo": "2024/09/Pirelli.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Riken",
+   "logo": "2024/09/Riken.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Satoya",
+   "logo": "2024/09/Satoya.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Sava",
+   "logo": "2024/09/Sava-gume.png",
+   "brand": "Sava",
+   "count": 236
+  },
+  {
+   "name": "Seha",
+   "logo": "2024/09/Seha-tyres.png",
+   "brand": "Seha",
+   "count": 10
+  },
+  {
+   "name": "Semperit",
+   "logo": "2024/09/Semperit.png",
+   "brand": "Semperit",
+   "count": 38
+  },
+  {
+   "name": "Speedways",
+   "logo": "2024/09/Speedways.png",
+   "brand": "Speedways",
+   "count": 142
+  },
+  {
+   "name": "Starmaxx",
+   "logo": "2024/09/Starmaxx.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Tigar",
+   "logo": "2024/09/Tigar-guma.png",
+   "brand": "Tigar",
+   "count": 49
+  },
+  {
+   "name": "Tourador",
+   "logo": "2024/09/Tourador-tyres.png",
+   "brand": "Tourador",
+   "count": 45
+  },
+  {
+   "name": "Tracmax",
+   "logo": "2024/09/Tracmax.png",
+   "brand": "Tracmax",
+   "count": 3
+  },
+  {
+   "name": "Trayal",
+   "logo": "2024/09/Trayal-gume.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Unigrip",
+   "logo": "2024/09/Unigrip.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Uniroyal",
+   "logo": "2024/09/Uniroyal.png",
+   "brand": "Uniroyal",
+   "count": 381
+  },
+  {
+   "name": "Vredestein",
+   "logo": "2024/09/Vredestein.png",
+   "brand": "Vredestein",
+   "count": 31
+  },
+  {
+   "name": "Wellplus",
+   "logo": "2024/09/Wellplus.png",
+   "brand": "",
+   "count": 0
+  },
+  {
+   "name": "Westlake",
+   "logo": "2024/09/West-Lake-tyres.png",
+   "brand": "Westlake",
+   "count": 335
+  }
+ ],
+ "counts": [
+  [
+   "Continental",
+   897
+  ],
+  [
+   "Goodyear",
+   585
+  ],
+  [
+   "Barum",
+   423
+  ],
+  [
+   "Nexen",
+   394
+  ],
+  [
+   "Uniroyal",
+   381
+  ],
+  [
+   "Westlake",
+   335
+  ],
+  [
+   "Viking",
+   279
+  ],
+  [
+   "Fulda",
+   246
+  ],
+  [
+   "Sava",
+   236
+  ],
+  [
+   "Dunlop",
+   233
+  ],
+  [
+   "Hankook",
+   224
+  ],
+  [
+   "Toyo",
+   180
+  ],
+  [
+   "Cooper",
+   177
+  ],
+  [
+   "Speedways",
+   142
+  ],
+  [
+   "Michelin",
+   127
+  ],
+  [
+   "Laufenn",
+   113
+  ],
+  [
+   "Tigar",
+   49
+  ],
+  [
+   "Tourador",
+   45
+  ],
+  [
+   "Duraturn",
+   41
+  ],
+  [
+   "Semperit",
+   38
+  ],
+  [
+   "Matador",
+   34
+  ],
+  [
+   "Vredestein",
+   31
+  ],
+  [
+   "Kelly",
+   17
+  ],
+  [
+   "Seha",
+   10
+  ],
+  [
+   "",
+   8
+  ],
+  [
+   "Gripmax",
+   7
+  ],
+  [
+   "Orium",
+   5
+  ],
+  [
+   "Boto",
+   4
+  ],
+  [
+   "Tracmax",
+   3
+  ],
+  [
+   "B Energy",
+   2
+  ],
+  [
+   "Lakesea",
+   1
+  ]
+ ]
+}
