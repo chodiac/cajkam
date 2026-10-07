@@ -27,7 +27,7 @@ function missing() {
 
 function render(p, list) {
   const title = `${p.sz} ${p.b} ${p.m}`.trim();
-  document.title = `${title} — Čajka M`;
+  document.title = `${title} - Čajka M`;
   $('meta[name="description"]').content = `${title}${p.z ? `, ${SEASON[p.z].toLowerCase()} guma` : ''}. ${p.np ? 'Cena na upit' : `${rsd(p.p)} sa PDV-om`}. ${p.st ? 'Na stanju.' : ''}`;
   $('[data-crumbs]', pdp).insertAdjacentHTML('beforeend',
     `<li><a href="${url(`gume.html?tip=${p.c}`)}">${CATS[p.c]}</a></li><li aria-current="page">${esc(p.sz)}</li>`);
@@ -36,7 +36,7 @@ function render(p, list) {
   im.src = img(p, true); im.alt = title;
   im.onerror = () => { im.onerror = null; im.src = img(p); };
   const th = $('[data-pdp-thumb]', pdp); th.src = img(p);
-  $('[data-pdp-thumbcode]', pdp).textContent = p.sz ? p.sz.split(' ')[0] : '—';
+  $('[data-pdp-thumbcode]', pdp).textContent = p.sz ? p.sz.split(' ')[0] : '-';
   $('[data-pdp-art]', pdp).innerHTML = sidewall(p);
   gallery();
   if (onSale(p)) { const s = $('[data-pdp-sale]', pdp); s.textContent = `−${pct(p)} %`; s.hidden = false; }
@@ -59,7 +59,7 @@ function render(p, list) {
     : `<p class="price">${onSale(p) ? `<s>${rsd(p.r)}</s>` : ''}<b>${rsd(p.p)}</b><small>po komadu, sa PDV-om</small></p>${onSale(p) ? `<span class="save">Ušteda ${rsd(p.r - p.p)} po gumi</span>` : ''}`;
   const stock = $('[data-pdp-stock]', pdp);
   stock.className = `stock ${p.st ? 'stock--ok' : 'stock--no'}`;
-  stock.innerHTML = p.st ? '<i></i>Na stanju — isporuka 1–3 radna dana' : `<i></i>${OUT_OF_STOCK}`;
+  stock.innerHTML = p.st ? '<i></i>Na stanju - isporuka 1–3 radna dana' : `<i></i>${OUT_OF_STOCK}`;
 
   // quantity
   const qIn = $('[data-q-input]', pdp);
@@ -92,8 +92,8 @@ function render(p, list) {
     ['Proizvođač', esc(p.b)], ['Model', esc(p.m)], ['Dimenzija', `<span class="sz">${esc(p.sz)}</span>`],
     ['Širina', p.w && `${p.w}${/^\d{3}$/.test(p.w) ? ' mm' : ''}`], ['Visina (profil)', p.h && `${p.h}${/^\d{2}$/.test(p.h) ? ' %' : ''}`], ['Prečnik felne', p.d && `${p.d}"`],
     ['Sezona', p.z && SEASON[p.z]], ['Tip gume', CATS[p.c]],
-    ['Indeks nosivosti', p.li && `${p.li}${LOAD[li1] ? ` — do ${num(LOAD[li1])} kg po gumi` : ''}`],
-    ['Indeks brzine', p.si && `${p.si}${SPEED[p.si] ? ` — do ${SPEED[p.si]} km/h` : ''}`],
+    ['Indeks nosivosti', p.li && `${p.li}${LOAD[li1] ? ` - do ${num(LOAD[li1])} kg po gumi` : ''}`],
+    ['Indeks brzine', p.si && `${p.si}${SPEED[p.si] ? ` - do ${SPEED[p.si]} km/h` : ''}`],
     ['Pozicija', p.pos && esc(p.pos)], ['Karakteristike', (p.f || []).join(', ')],
     ['Zemlja porekla', `<span class="todo">${icon('info')}Podatak za dopunu</span>`],
     ['Šifra', String(p.id)],

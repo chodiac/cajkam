@@ -182,7 +182,7 @@ function emptyState() {
   }).filter((w) => w[3]).sort((a, b) => a[3] - b[3]).slice(0, 3);
   const size = [state.sirina, state.visina && `/${state.visina}`, state.precnik && ` R${state.precnik}`].filter(Boolean).join('');
   return `<div class="empty">${size ? `<p class="sz">${esc(size)}</p>` : ''}<h2 class="d3">Nema guma za ove filtere</h2>
-   <p>Pokušajte bez jednog od filtera ili nas pozovite — ako gume nema u online ponudi, proverićemo kod dobavljača.</p>
+   <p>Pokušajte bez jednog od filtera ili nas pozovite - ako gume nema u online ponudi, proverićemo kod dobavljača.</p>
    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${ways.map(([k, v, l, n]) => `<button class="btn btn--line btn--sm" data-rm-k="${k}" data-rm-v="${esc(v)}">Bez „${esc(l)}” · ${num(n)}</button>`).join('')}
    <a class="btn btn--go btn--sm" href="tel:+381325461011">${icon('phone')}+381 32 5461 011</a></div></div>`;
 }
@@ -211,7 +211,7 @@ function retitle() {
   const t = words[0].toUpperCase() + words.slice(1);
   if (h.getAttribute('aria-label') === t) return;
   h.textContent = t; h.setAttribute('aria-label', t);
-  document.title = `${h.textContent} — Čajka M`;
+  document.title = `${h.textContent} - Čajka M`;
 }
 
 function bind() {
@@ -287,7 +287,7 @@ const cmpbar = $('[data-cmpbar]');
 function paintCmp() {
   const n = compare.items().length;
   cmpbar.hidden = !n;
-  $('[data-cmpbar-t]', cmpbar).textContent = n === 1 ? '1 guma u poređenju — dodajte još jednu' : `${n} gume u poređenju`;
+  $('[data-cmpbar-t]', cmpbar).textContent = n === 1 ? '1 guma u poređenju - dodajte još jednu' : `${n} gume u poređenju`;
 }
 onChange(paintCmp);
 paintCmp();

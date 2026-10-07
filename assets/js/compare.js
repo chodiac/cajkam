@@ -11,14 +11,14 @@ const ROWS = [
   ['Dostupnost', (p) => (p.st ? '<span class="stock stock--ok"><i></i>Na stanju</span>' : '<span class="stock stock--no"><i></i>Nije na stanju</span>')],
   ['Proizvođač', (p) => esc(p.b)],
   ['Model', (p) => esc(p.m)],
-  ['Sezona', (p) => SEASON[p.z] || '—'],
-  ['Tip gume', (p) => CATS[p.c] || '—'],
-  ['Širina', (p) => p.w || '—'],
-  ['Visina', (p) => p.h || '—'],
-  ['Prečnik', (p) => (p.d ? `${p.d}"` : '—')],
-  ['Indeks nosivosti', (p) => p.li || '—'],
-  ['Indeks brzine', (p) => p.si || '—'],
-  ['Karakteristike', (p) => (p.f || []).join(', ') || '—'],
+  ['Sezona', (p) => SEASON[p.z] || '-'],
+  ['Tip gume', (p) => CATS[p.c] || '-'],
+  ['Širina', (p) => p.w || '-'],
+  ['Visina', (p) => p.h || '-'],
+  ['Prečnik', (p) => (p.d ? `${p.d}"` : '-')],
+  ['Indeks nosivosti', (p) => p.li || '-'],
+  ['Indeks brzine', (p) => p.si || '-'],
+  ['Karakteristike', (p) => (p.f || []).join(', ') || '-'],
 ];
 
 function render() {

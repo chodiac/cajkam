@@ -496,6 +496,8 @@ def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='
 <script type="module" src="{Rp}assets/js/{mod}.js?v={VER}"></script>
 </body>
 </html>'''
+    # house style: a plain hyphen instead of the em dash, everywhere (templates and imported texts)
+    doc = doc.replace('&mdash;', '-').replace('—', '-')
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding='utf-8')

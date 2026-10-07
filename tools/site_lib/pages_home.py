@@ -34,7 +34,6 @@ def hero():
   <span class="hero__cond-i" data-cond-icon>{icon('sun')}</span><span data-cond-label>Suv asfalt</span>
  </div>
  <button class="hero__ctl" type="button" data-film-ctl aria-label="Pauziraj video">{icon('pause')}</button>
- {'' if has_video else f'<p class="hero__tmp">{todo("Privremeni kadar — zameniti snimkom")}</p>'}
 
  <div class="wrap hero__dock">
   <form class="finder" action="gume.html" data-finder aria-labelledby="finder-t">

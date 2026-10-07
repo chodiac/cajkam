@@ -22,7 +22,7 @@ form.addEventListener('submit', (e) => {
   e.preventDefault();
   const err = $('[data-err]', form);
   if (!lines.length) {
-    err.textContent = 'Korpa je prazna — dodajte gume pre poručivanja.';
+    err.textContent = 'Korpa je prazna - dodajte gume pre poručivanja.';
     err.hidden = false;
     return;
   }

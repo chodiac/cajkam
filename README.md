@@ -60,7 +60,10 @@ Its own design idea is **the road as the page grid**:
   - The button shows the live count ("Prikaži 22 gume").
   - Submitting goes to the real filtered catalogue URL.
 - **Replacing the film:** put `media/hero.mp4` (and optionally `media/hero-720.mp4` for phones) in place and
-  rebuild. The `<video>` then replaces the canvas automatically, and the "Privremeni kadar" tag disappears.
+  rebuild. The `<video>` then replaces the canvas automatically. (The on-page "Privremeni kadar" tag was removed
+  at the client's request, so the temporary film is no longer labelled on the site.)
+- **Phones:** the film frames the wheel above the finder (it reads the finder's position), so the shot stays
+  visible on a one-screen hero.
 
 ## Signature: "Gazeći sloj"
 

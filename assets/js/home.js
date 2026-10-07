@@ -28,16 +28,16 @@ const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
   const uniq = (list, i) => [...new Set(list.map((r) => r[i]))].sort(numSort);
   function update() {
     let list = base();
-    fill(sel.w, uniq(list, 2), '—');
+    fill(sel.w, uniq(list, 2), '-');
     if (sel.w.value) list = list.filter((r) => r[2] === sel.w.value);
     const hs = uniq(list, 3).filter(Boolean);
-    fill(sel.h, sel.w.value ? hs : [], '—');
+    fill(sel.h, sel.w.value ? hs : [], '-');
     if (sel.h.value) list = list.filter((r) => r[3] === sel.h.value);
-    fill(sel.d, sel.w.value ? uniq(list, 4) : [], '—');
+    fill(sel.d, sel.w.value ? uniq(list, 4) : [], '-');
     if (sel.d.value) list = list.filter((r) => r[4] === sel.d.value);
     const n = list.reduce((a, r) => a + r[5], 0);
     const any = sel.w.value || season() || tip.value !== 'putnicke';
-    label.textContent = !any ? 'Pronađi gume' : n ? `Prikaži ${num(n)} ${gume(n, true)}` : 'Nema — prikaži slične';
+    label.textContent = !any ? 'Pronađi gume' : n ? `Prikaži ${num(n)} ${gume(n, true)}` : 'Nema - prikaži slične';
   }
   form.addEventListener('change', (e) => {
     if (e.target === tip || e.target.name === 'sezona') update();
@@ -82,7 +82,7 @@ const PHASE = 6.5; // seconds per condition
   const ctx = cv.getContext('2d', { alpha: false });
   const ctl = $('[data-film-ctl]');
   const lab = $('[data-cond-label]'), ico = $('[data-cond-icon]');
-  let W = 0, H = 0, t = 0, last = 0, playing = !CALM, visible = true, raf = 0, curCond = -1;
+  let clear = 1, W = 0, H = 0, t = 0, last = 0, playing = !CALM, visible = true, raf = 0, curCond = -1;
 
   // grain + asphalt textures are made once
   const noise = (w, h, a, blurX = 0) => {
@@ -111,6 +111,9 @@ const PHASE = 6.5; // seconds per condition
     const r = cv.getBoundingClientRect();
     const scale = Math.min(1, 1280 / r.width) * Math.min(devicePixelRatio || 1, 1.5);
     W = cv.width = Math.round(r.width * scale); H = cv.height = Math.round(r.height * scale);
+    // on phones the finder covers the lower part of the hero: frame the shot above it
+    const dock = $('.hero__dock', hero);
+    clear = dock && r.height ? dock.offsetTop / r.height : 1;
   }
   const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
   const mix = (a, b, k) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], k))).join(',')})`; };
@@ -133,10 +136,13 @@ const PHASE = 6.5; // seconds per condition
     const dry = 1 - wet - snow;
 
     const narrow = W < H * 1.1;
-    const horizon = H * (narrow ? .52 : .56);
-    const ground = H * (narrow ? .82 : .9);
-    const R = Math.min(H * (narrow ? .27 : .43), W * (narrow ? .38 : .34));
-    const cx = W * (narrow ? .62 : .74), cy = ground - R;
+    // narrow (phone) frame: the wheel stands on a road that ends just above the finder
+    // the road ends just above the finder on every screen, so the contact patch (and the
+    // spray it throws) is never hidden behind the form
+    const ground = narrow ? H * Math.max(.3, clear - .1) : H * Math.min(.9, Math.max(.5, clear - .03));
+    const horizon = narrow ? ground - H * .16 : ground - H * .3;
+    const R = narrow ? Math.min(ground * .46, W * .38) : Math.min(H * .42, ground * .62, W * .32);
+    const cx = W * (narrow ? .64 : .74), cy = ground - R;
     const speed = W * .9; // px per second at the contact line
     const off = t * speed;
 
@@ -241,22 +247,40 @@ const PHASE = 6.5; // seconds per condition
     ctx.lineWidth = R * .025; ctx.beginPath(); ctx.arc(0, 0, R * .985, -Math.PI * .95, -Math.PI * .15); ctx.stroke();
     ctx.restore();
 
-    // particles thrown back from the contact patch
-    const emit = wet * 6 + snow * 5 + dry * 1.2;
+    // particles thrown back from the contact patch. Everything is scaled to the
+    // wheel (R), so the splash reads the same on a phone and on a 4K screen.
+    const sc = R / 150;
+    const emit = wet * 11 + snow * 6 + dry * 1.2;
     for (let i = 0; i < emit * dt * 60; i++) {
-      const type = Math.random() < wet / (wet + snow + dry * .2 + 1e-6) ? 'w' : Math.random() < snow / (snow + dry * .2 + 1e-6) ? 's' : 'd';
-      parts.push({ x: cx - R * .2 - Math.random() * R * .2, y: ground - 2, vx: -(.5 + Math.random()) * speed * .45, vy: -(.3 + Math.random() * .8) * H * .5, life: 0, max: .5 + Math.random() * .6, type, r: 1 + Math.random() * 2.5 });
+      const roll = Math.random();
+      const type = roll < wet / (wet + snow + dry * .15 + 1e-6) ? 'w' : Math.random() < snow / (snow + dry * .15 + 1e-6) ? 's' : 'd';
+      const up = type === 'w' ? .35 + Math.random() * .95 : .3 + Math.random() * .9;
+      parts.push({ x: cx - R * (.08 + Math.random() * .3), y: ground - 2 * sc, vx: -(.6 + Math.random() * 1.4) * R * 3.2, vy: -up * R * 3.4,
+        life: 0, max: .45 + Math.random() * .55, type, r: (type === 'w' ? 1.4 + Math.random() * 2.6 : 1 + Math.random() * 2.5) * sc });
     }
+    // a soft sheet of mist behind the wheel while the road is wet
+    if (wet > .02) {
+      const mx = cx - R * .9, my = ground - R * .35;
+      const mg = ctx.createRadialGradient(mx, my, 0, mx, my, R * 1.2);
+      mg.addColorStop(0, `rgba(205,225,240,${.28 * wet})`); mg.addColorStop(1, 'rgba(205,225,240,0)');
+      ctx.fillStyle = mg; ctx.fillRect(mx - R * 1.3, my - R * 1.3, R * 2.6, R * 2.6);
+    }
+    ctx.lineCap = 'round';
     for (let i = parts.length - 1; i >= 0; i--) {
       const p = parts[i];
-      p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += H * 1.6 * dt;
-      if (p.life > p.max || p.y > ground + 4) { parts.splice(i, 1); continue; }
+      p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += R * 9 * dt;
+      if (p.life > p.max || p.y > ground + 4 * sc) { parts.splice(i, 1); continue; }
       const al = 1 - p.life / p.max;
-      ctx.fillStyle = p.type === 'w' ? `rgba(200,225,240,${.5 * al})` : p.type === 's' ? `rgba(250,252,255,${.8 * al})` : `rgba(200,170,130,${.35 * al})`;
-      if (p.type === 'w') ctx.fillRect(p.x, p.y, p.r * 5 * (W / 1280), p.r * .8);
-      else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (W / 1280) * (p.type === 's' ? 1.6 : 1), 0, 7); ctx.fill(); }
+      if (p.type === 'w') {
+        // droplet with a short motion streak along its path
+        ctx.strokeStyle = `rgba(215,232,245,${.6 * al})`; ctx.lineWidth = p.r * .8;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * .013, p.y - p.vy * .013); ctx.stroke();
+      } else {
+        ctx.fillStyle = p.type === 's' ? `rgba(250,252,255,${.85 * al})` : `rgba(200,170,130,${.35 * al})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (p.type === 's' ? 1.5 : 1), 0, 7); ctx.fill();
+      }
     }
-    if (parts.length > 900) parts.splice(0, parts.length - 900);
+    if (parts.length > 1400) parts.splice(0, parts.length - 1400);
 
     // weather in the air
     if (wet > .01) {
@@ -307,7 +331,8 @@ const PHASE = 6.5; // seconds per condition
   document.addEventListener('visibilitychange', kick);
   ctl?.addEventListener('click', () => setPlaying(!playing));
   if (!CALM) kick();
-  window.__film = { draw: (time) => { t = time; draw(0); }, canvas: cv };
+  // dev hooks: draw a still at a given time, or run n frames (used to export the poster and to check the spray)
+  window.__film = { draw: (time) => { t = time; draw(0); }, step: (time, n = 30) => { t = time; for (let i = 0; i < n; i++) { t += 1 / 30; draw(1 / 30); } }, canvas: cv };
 })();
 
 // ------------------------------------------------------------ tread (signature)
