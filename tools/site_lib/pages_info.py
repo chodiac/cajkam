@@ -1,13 +1,48 @@
 """Service, hotel, brands, blog, about, contact and policy pages."""
 import re
 
-from .base import (R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
+from .base import (logo_src, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
                    esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, post_card, relink, date_sr, todo)
 from .pages_home import hotel_stack
 
 
 def slug(g):
     return re.sub(r'[^a-z]+', '-', g.lower().replace('ž', 'z').replace('š', 's').replace('č', 'c').replace('ć', 'c')).strip('-')
+
+
+def booking_form(no=3):
+    """Appointment request for the two services people book ahead: wheel alignment
+    and a tyre change. Hours follow the Guma Servis hours on cajkam.rs."""
+    return f'''<section class="booking" id="zakazivanje" aria-labelledby="book-t">
+ <div class="booking__intro">
+  {km(no, 'Zakazivanje')}
+  <h2 id="book-t" class="d2">Zakažite termin</h2>
+  <p>Reglaža trapa ili zamena guma u Guma Servisu, {BIZ['service_address']}. Pošaljite željeni termin — potvrđujemo ga telefonom.</p>
+  <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['service_hours'])}</ul>
+  <p class="fine">Nedeljom ne radimo. Hitno? <a href="tel:{BIZ['phone_href']}">{BIZ['phone']}</a>, opcija 3.</p>
+ </div>
+ <form class="box booking__form" data-booking data-demo-form data-success="Zahtev za termin je zabeležen. Termin potvrđujemo telefonom.">
+  <fieldset class="field field--full"><legend>Usluga *</legend>
+   <div class="seg seg--wide booking__svc">
+    <label><input type="radio" name="usluga" value="reglaza" required checked><span>{icon('align')}Reglaža trapa</span></label>
+    <label><input type="radio" name="usluga" value="zamena"><span>{icon('wrench')}Zamena guma</span></label>
+   </div>
+  </fieldset>
+  <div class="fields">
+   <label class="field"><span>Ime i prezime *</span><input name="ime" required autocomplete="name"></label>
+   <label class="field"><span>Telefon *</span><input name="tel" type="tel" required autocomplete="tel" placeholder="06x xxx xxxx"></label>
+   <label class="field"><span>Vozilo (marka i model) *</span><input name="vozilo" required placeholder="npr. Škoda Octavia"></label>
+   <label class="field"><span>Registarska oznaka</span><input name="reg" placeholder="ČA 123-AB"></label>
+   <label class="field" data-tyre-only><span>Dimenzija guma <small>(za zamenu)</small></span><input name="dimenzija" placeholder="205/55 R16"></label>
+   <label class="field" data-tyre-only><span>Gume su <small>(za zamenu)</small></span><select name="gume"><option value="kod-mene">Kod mene</option><option value="hotel">U hotelu za gume</option><option value="kupujem">Kupujem nove kod vas</option></select></label>
+   <label class="field"><span>Željeni datum *</span><input name="datum" type="date" required data-book-date></label>
+   <label class="field"><span>Željeno vreme *</span><select name="vreme" required data-book-time></select></label>
+   <label class="field field--full"><span>E-mail <small>(za potvrdu, nije obavezno)</small></span><input name="email" type="email" autocomplete="email"></label>
+   <label class="field field--full"><span>Napomena</span><textarea name="napomena" rows="2" placeholder="npr. vozilo vuče u stranu"></textarea></label>
+  </div>
+  <button class="btn btn--go btn--block btn--lg" type="submit"><span>Pošalji zahtev za termin</span>{icon('arrow')}</button>
+ </form>
+</section>'''
 
 
 def service_page():
@@ -24,7 +59,8 @@ def service_page():
 <section class="sec sec--tight"><div class="wrap svcpage">
  <div class="svcpage__main">
   <div class="svcrows">{items}</div>
-  <div class="sec__head">{km(2, 'Cenovnik')}<h2 class="d2" id="cenovnik">Cenovnik usluga</h2></div>
+  {booking_form(2)}
+  <div class="sec__head">{km(3, 'Cenovnik')}<h2 class="d2" id="cenovnik">Cenovnik usluga</h2></div>
   <nav class="jump" aria-label="Grupe usluga">{''.join(f'<a href="#{slug(g)}">{g}</a>' for g, _ in SERVICE_PRICES)}</nav>
   <div class="pricelists">{tables}</div>
   <p class="fine">Cene su u dinarima, prema cenovniku objavljenom na cajkam.rs.</p>
@@ -34,7 +70,8 @@ def service_page():
    <p class="label label--light">Guma Servis</p>
    <p class="big">{BIZ['service_address']}<br>{BIZ['service_city']}</p>
    <ul class="hours hours--light">{hours}</ul>
-   <a class="btn btn--go btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>Pozovite — opcija 3</span></a>
+   <a class="btn btn--go btn--block" href="#zakazivanje"><span>Zakažite termin</span>{icon('arrow')}</a>
+   <a class="btn btn--line-light btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>Pozovite — opcija 3</span></a>
    <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja do servisa</span></a>
    <p class="fine">Servis za teretna vozila: {BIZ['address']}, radnim danima 08–16h, subotom 08–14h.</p>
   </div>
@@ -87,7 +124,7 @@ def brands_page():
     for b in names:
         lg = logos.get(b)
         c = counts.get(b, 0)
-        art = (f'<img src="{UPLOADS}{lg["logo"]}" alt="" loading="lazy" decoding="async">' if lg else
+        art = (f'<img src="{logo_src(lg)}" alt="" loading="lazy" decoding="async">' if lg else
                f'<span class="brand__word">{esc(b)}</span>')
         meta = f'{n(c)} guma' if c else 'Na upit'
         href = f'gume.html?brend={b}' if c else 'kontakt.html'
@@ -178,6 +215,7 @@ def contact_page():
    <button class="btn btn--go" type="submit"><span>Pošalji poruku</span>{icon('arrow')}</button>
   </form>
  </div>
+ {booking_form(2)}
  <div class="sec__head" id="kako-do-nas">{km(2, 'Lokacije')}<h2 class="d2">Kako do nas</h2></div>
  <div class="locs">
   {loc('Čajka M — prodaja', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'], '<p class="fine">Ovde je i servis za teretna vozila.</p>')}

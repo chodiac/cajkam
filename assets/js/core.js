@@ -306,9 +306,43 @@ function initActions() {
   $$('[data-demo-form]').forEach((f) => f.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!f.reportValidity()) return;
+    f.style.minHeight = `${f.offsetHeight}px`; // the thank-you state keeps the form's footprint
     f.innerHTML = `<div class="done" style="padding:24px 0"><div class="done__mark">${icon('check')}</div><p class="big">${esc(f.dataset.success)}</p>
       <p class="todo-note"><span class="todo">${icon('info')}Nije povezano</span>Forma još nije povezana sa serverom — ništa nije poslato. Za hitne stvari pozovite +381 32 5461 011.</p></div>`;
   }));
+}
+
+// Appointment form (Guma Servis): open days and hours follow the service's
+// opening times — weekdays 08–18h, Saturday 08–16h, closed on Sunday.
+function initBooking() {
+  $$('[data-booking]').forEach((f) => {
+    const date = $('[data-book-date]', f), time = $('[data-book-time]', f);
+    const pad = (n) => String(n).padStart(2, '0');
+    const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const today = new Date();
+    date.min = iso(today);
+    date.max = iso(new Date(today.getFullYear(), today.getMonth() + 3, today.getDate()));
+    function slots() {
+      const d = date.value ? new Date(`${date.value}T12:00`) : null;
+      const sunday = d && d.getDay() === 0;
+      date.setCustomValidity(sunday ? 'Nedeljom ne radimo — izaberite drugi dan.' : '');
+      const last = d && d.getDay() === 6 ? 15 : 17; // last start an hour before closing
+      const was = time.value;
+      time.innerHTML = '<option value="">Izaberite vreme</option>' + Array.from({ length: last - 8 + 1 }, (_, i) => `${pad(8 + i)}:00`)
+        .map((t) => `<option${t === was ? ' selected' : ''}>${t}</option>`).join('');
+      time.disabled = !date.value || sunday;
+    }
+    function service() {
+      const tyres = f.usluga.value === 'zamena';
+      // the tyre fields stay in place (no layout jump) and are simply switched off for alignment
+      $$('[data-tyre-only]', f).forEach((l) => { l.classList.toggle('is-off', !tyres); $$('input, select', l).forEach((i) => { i.disabled = !tyres; }); });
+    }
+    const want = new URLSearchParams(location.search).get('usluga');
+    if (want === 'zamena' || want === 'reglaza') f.usluga.value = want;
+    date.addEventListener('change', slots);
+    f.addEventListener('change', (e) => { if (e.target.name === 'usluga') service(); });
+    slots(); service();
+  });
 }
 
 export function initRails(root = document) {
@@ -399,6 +433,7 @@ function initBye() {
 }
 
 initHeader();
+initBooking();
 initActions();
 paintCounts();
 splitHeadings();

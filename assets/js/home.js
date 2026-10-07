@@ -402,7 +402,8 @@ const PHASE = 6.5; // seconds per condition
   const fine = matchMedia('(hover: hover) and (min-width: 901px)').matches;
   function activate(it) {
     if (it.hasAttribute('data-on')) return;
-    items.forEach((x) => { const on = x === it; x.toggleAttribute('data-on', on); $('.svc__btn', x).setAttribute('aria-expanded', on); });
+    items.forEach((x) => { const on = x === it; x.toggleAttribute('data-on', on); $('.svc__btn', x).setAttribute('aria-pressed', on); });
+    $$('[data-svc-desc]').forEach((p) => p.classList.toggle('is-on', p.dataset.svcDesc === it.dataset.svc));
     $$('[data-svc-media]').forEach((m) => { m.hidden = m.dataset.svcMedia !== it.dataset.svc; });
   }
   items.forEach((it) => {

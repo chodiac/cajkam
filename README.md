@@ -23,7 +23,8 @@ Its own design idea is **the road as the page grid**:
 
 - **Road rail:** a dashed road marking runs down the page edge, and a small tyre rolls along it with the
   scroll position. Below 1200 px it becomes a thin yellow progress line.
-- **Kilometre posts:** every section is marked like a road post ("KM 03 · Akcije").
+- **Section labels:** every section has a small uppercase label above its heading (the original "KM 03"
+  posts were removed at the client's request).
 - **Type:** Barlow Condensed, which reads like road signage, is used for display and for every tyre size.
   Inter is used for text.
 - **Colour:** logo slate `#243B4A`, asphalt ink and bone paper. Road-marking yellow `#F2B51C` is used only
@@ -85,8 +86,18 @@ Its own design idea is **the road as the page grid**:
 | Product | Photo zoom that follows the pointer (tap on phones), a sidewall-code view, the total ticking with quantity, sticky buy bar on phones |
 | Service / hotel / about / blog | Image wipes, staggered reveals, sticky price-list jump bar, count-ups |
 
-`prefers-reduced-motion` switches all of it off (`html.calm`). `?motion=1` forces motion for testing, and
-`?motion=0` forces calm mode.
+Motion is on by default for every visitor (client's request; the system "reduce motion" setting is not
+used). `?motion=0` switches to the calm version for the rest of the visit (`html.calm`), and `?motion=1`
+switches it back.
+
+## Appointment form
+
+`servis.html#zakazivanje` (also on `kontakt.html`, linked from the homepage service block): one form for
+**reglaža trapa** or **zamena guma**, chosen with a toggle (`?usluga=zamena` preselects). Dates start today and
+run three months ahead. Sundays are refused. Times follow the Guma Servis hours: weekdays 08:00–17:00 starts and
+Saturday 08:00–15:00. The tyre fields (dimension, where the tyres are) stay in place and are only switched off
+for alignment, so the form never changes height. Like the other forms, it validates and then says plainly that
+nothing was sent; it needs connecting to e-mail or a booking system.
 
 ## Content and honesty
 

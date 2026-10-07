@@ -151,6 +151,12 @@ POPULAR_SIZES = [s for s, _ in popular.most_common(8)]
 BRAND_COUNT = len([b for b, c in BRANDS['counts'] if b and c])
 
 
+def logo_src(lg):
+    """Trimmed, transparent copy from tools/logos.py when present, else the shop's original."""
+    local = ROOT / 'assets' / 'img' / 'brands' / (Path(lg['logo']).stem + '.png')
+    return f'{R}assets/img/brands/{local.name}' if local.exists() else UPLOADS + lg['logo']
+
+
 def cat_image(c):
     """A real product photo that plainly shows the category's kind of tyre."""
     pref = {'putnicke': ('Continental', 'Goodyear', 'Michelin'), 'poluteretne': ('Continental', 'Barum'),
@@ -476,7 +482,7 @@ def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
 <link rel="stylesheet" href="{Rp}assets/css/site.css?v={VER}">
-<script>document.documentElement.classList.add('js');try{{var q=location.search;if(/[?&]motion=1/.test(q))sessionStorage.setItem('cm.motion','1');if(/[?&]motion=0/.test(q))sessionStorage.removeItem('cm.motion');if((matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('cm.motion')!=='1')||/[?&]motion=0/.test(q))document.documentElement.classList.add('calm')}}catch(e){{}}</script>
+<script>document.documentElement.classList.add('js');try{{var q=location.search;if(/[?&]motion=0/.test(q))sessionStorage.setItem('cm.motion','0');if(/[?&]motion=1/.test(q))sessionStorage.removeItem('cm.motion');if(sessionStorage.getItem('cm.motion')==='0')document.documentElement.classList.add('calm')}}catch(e){{}}</script>
 {head_extra}
 </head>
 <body class="{cls}">
@@ -498,8 +504,8 @@ def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='
 
 # --------------------------------------------------------------- building blocks
 def km(no, text, light=False):
-    """Kilometre-post section marker: the site's wayfinding device."""
-    return f'<p class="km{" km--light" if light else ""}"><span class="km__post">KM {no:02d}</span><span>{text}</span></p>'
+    """Small section label above a heading (the number is kept for call sites, not shown)."""
+    return f'<p class="km{" km--light" if light else ""}">{text}</p>'
 
 
 def crumbs(items):

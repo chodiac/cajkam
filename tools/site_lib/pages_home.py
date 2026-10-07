@@ -2,7 +2,7 @@
 from .base import (ROOT, R, BIZ, CATS, SEASONS, RECOMMENDED, SERVICES, TIRES, IN_STOCK, ON_SALE, CAT_COUNT, CAT_STOCK,
                    SEASON_STOCK, BY_SLUG, MAX_DISCOUNT, POPULAR_SIZES, BRANDS, BRAND_COUNT, POSTS, UPLOADS,
                    esc, fmt, n, numkey, icon, vehicle, km, card, rail, media_slot, post_card, explainer, page,
-                   size_query, cat_image, img_url, todo)
+                   size_query, cat_image, img_url, todo, logo_src)
 
 
 def hero():
@@ -160,7 +160,7 @@ def offers():
 def brands():
     logos = [lg for lg in BRANDS['logos'] if lg['count']] + [lg for lg in BRANDS['logos'] if not lg['count']]
     row = ''.join(f'<a class="brandlogo" href="{"gume.html?brend=" + lg["brand"] if lg["brand"] else "brendovi.html"}">'
-                  f'<img src="{UPLOADS}{lg["logo"]}" alt="{esc(lg["name"])}" loading="lazy" decoding="async"></a>'
+                  f'<img src="{logo_src(lg)}" alt="{esc(lg["name"])}" loading="lazy" decoding="async"></a>'
                   for lg in logos)
     return f'''
 <section class="brands" aria-labelledby="brands-t">
@@ -175,11 +175,14 @@ def brands():
 
 def service():
     items = ''.join(f'''<li class="svc__item" data-svc="{k}"{' data-on' if i == 0 else ''}>
- <button type="button" class="svc__btn" aria-expanded="{str(i == 0).lower()}" aria-controls="svc-{k}">
-  <span class="svc__no">0{i + 1}</span><span class="svc__name">{t}</span><span class="svc__price">{pr}</span>{icon('plus', 'i svc__plus')}
+ <button type="button" class="svc__btn" aria-pressed="{str(i == 0).lower()}" aria-controls="svc-desc">
+  <span class="svc__no">0{i + 1}</span><span class="svc__name">{t}</span><span class="svc__price">{pr}</span>{icon('arrow', 'i svc__plus')}
  </button>
- <div class="svc__body" id="svc-{k}"><p>{d}</p></div>
 </li>''' for i, (k, t, pr, d, _, _) in enumerate(SERVICES))
+    # All descriptions share one grid cell, so the box is always as tall as the
+    # longest one and switching services never changes the section's height.
+    descs = ''.join(f'<p data-svc-desc="{k}"{" class=is-on" if i == 0 else ""}>{d}</p>'
+                    for i, (k, _, _, d, _, _) in enumerate(SERVICES))
     media = ''.join(f'<div class="svc__media" data-svc-media="{k}"{"" if i == 0 else " hidden"}>{media_slot(ph, "4/5", "slot--dark", ico)}</div>'
                     for i, (k, _, _, _, ph, ico) in enumerate(SERVICES))
     return f'''
@@ -190,8 +193,10 @@ def service():
    <h2 id="svc-t" class="d2" data-split>Kupite gume. Mi ih montiramo.</h2>
    <p class="svc__lede">Servis u Ulici {BIZ['service_address']} u Čačku: montaža, balansiranje, reglaža, vulkanizerske usluge i brzi servis.</p>
    <ul class="svc__list" data-svc-list>{items}</ul>
+   <div class="svc__desc" id="svc-desc" aria-live="polite">{descs}</div>
    <div class="svc__cta">
-    <a class="btn btn--go" href="servis.html"><span>Ceo cenovnik</span>{icon('arrow')}</a>
+    <a class="btn btn--go" href="servis.html#zakazivanje"><span>Zakažite termin</span>{icon('arrow')}</a>
+    <a class="btn btn--line-light" href="servis.html#cenovnik"><span>Cenovnik</span></a>
     <a class="btn btn--line-light" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>{BIZ['phone']} · opcija 3</span></a>
    </div>
    <p class="svc__hours">{icon('clock')}Radnim danima 08–18h · Subotom 08–16h</p>

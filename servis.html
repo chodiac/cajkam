@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="sr-Latn" data-root="" data-v="c01480f6">
+<html lang="sr-Latn" data-root="" data-v="79e6ef01">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,8 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/site.css?v=c01480f6">
-<script>document.documentElement.classList.add('js');try{var q=location.search;if(/[?&]motion=1/.test(q))sessionStorage.setItem('cm.motion','1');if(/[?&]motion=0/.test(q))sessionStorage.removeItem('cm.motion');if((matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('cm.motion')!=='1')||/[?&]motion=0/.test(q))document.documentElement.classList.add('calm')}catch(e){}</script>
+<link rel="stylesheet" href="assets/css/site.css?v=79e6ef01">
+<script>document.documentElement.classList.add('js');try{var q=location.search;if(/[?&]motion=0/.test(q))sessionStorage.setItem('cm.motion','0');if(/[?&]motion=1/.test(q))sessionStorage.removeItem('cm.motion');if(sessionStorage.getItem('cm.motion')==='0')document.documentElement.classList.add('calm')}catch(e){}</script>
 
 </head>
 <body class="">
@@ -57,7 +57,7 @@
 <main id="main">
 <section class="phead phead--dark"><div class="wrap">
  <nav class="crumbs" aria-label="Putanja"><ol><li><a href="index.html">Početna</a></li><li aria-current="page">Guma Servis</li></ol></nav>
- <p class="km"><span class="km__post">KM 01</span><span>Servis</span></p>
+ <p class="km">Servis</p>
  <h1 class="phead__t" data-split>Guma Servis</h1>
  <p class="phead__lede">Vulkanizerske usluge u Čačku — savremena oprema, širok asortiman i zaposleni kojima je zadovoljstvo klijenata na prvom mestu.</p>
  <div class="phead__road" aria-hidden="true"></div>
@@ -80,7 +80,37 @@
  <div class="svcrow__media"><figure class="slot slot--dark" style="aspect-ratio:4/3" data-reveal="wipe"><div class="slot__art" aria-hidden="true"><svg class="i" aria-hidden="true"><use href="#i-drop"/></svg></div><figcaption><span class="todo" title="Sadržaj za dopunu"><svg class="i" aria-hidden="true"><use href="#i-info"/></svg>Fotografija za dopunu</span><span>Samouslužna perionica Ehrle ispred servisa</span></figcaption></figure></div>
  <div class="svcrow__copy"><p class="svcrow__no">05</p><h2 class="d3">Samouslužna perionica</h2><p>Oprema za samouslužno pranje vozila nemačkog brenda Ehrle, na istoj adresi.</p><p class="svcrow__price">u servisu</p></div>
 </article></div>
-  <div class="sec__head"><p class="km"><span class="km__post">KM 02</span><span>Cenovnik</span></p><h2 class="d2" id="cenovnik">Cenovnik usluga</h2></div>
+  <section class="booking" id="zakazivanje" aria-labelledby="book-t">
+ <div class="booking__intro">
+  <p class="km">Zakazivanje</p>
+  <h2 id="book-t" class="d2">Zakažite termin</h2>
+  <p>Reglaža trapa ili zamena guma u Guma Servisu, Dr. Dragiše Mišovića 100. Pošaljite željeni termin — potvrđujemo ga telefonom.</p>
+  <ul class="hours hours--light"><li><span>Radnim danima</span><b>08–18h</b></li><li><span>Subotom</span><b>08–16h</b></li></ul>
+  <p class="fine">Nedeljom ne radimo. Hitno? <a href="tel:+381325461011">+381 32 5461 011</a>, opcija 3.</p>
+ </div>
+ <form class="box booking__form" data-booking data-demo-form data-success="Zahtev za termin je zabeležen. Termin potvrđujemo telefonom.">
+  <fieldset class="field field--full"><legend>Usluga *</legend>
+   <div class="seg seg--wide booking__svc">
+    <label><input type="radio" name="usluga" value="reglaza" required checked><span><svg class="i" aria-hidden="true"><use href="#i-align"/></svg>Reglaža trapa</span></label>
+    <label><input type="radio" name="usluga" value="zamena"><span><svg class="i" aria-hidden="true"><use href="#i-wrench"/></svg>Zamena guma</span></label>
+   </div>
+  </fieldset>
+  <div class="fields">
+   <label class="field"><span>Ime i prezime *</span><input name="ime" required autocomplete="name"></label>
+   <label class="field"><span>Telefon *</span><input name="tel" type="tel" required autocomplete="tel" placeholder="06x xxx xxxx"></label>
+   <label class="field"><span>Vozilo (marka i model) *</span><input name="vozilo" required placeholder="npr. Škoda Octavia"></label>
+   <label class="field"><span>Registarska oznaka</span><input name="reg" placeholder="ČA 123-AB"></label>
+   <label class="field" data-tyre-only><span>Dimenzija guma <small>(za zamenu)</small></span><input name="dimenzija" placeholder="205/55 R16"></label>
+   <label class="field" data-tyre-only><span>Gume su <small>(za zamenu)</small></span><select name="gume"><option value="kod-mene">Kod mene</option><option value="hotel">U hotelu za gume</option><option value="kupujem">Kupujem nove kod vas</option></select></label>
+   <label class="field"><span>Željeni datum *</span><input name="datum" type="date" required data-book-date></label>
+   <label class="field"><span>Željeno vreme *</span><select name="vreme" required data-book-time></select></label>
+   <label class="field field--full"><span>E-mail <small>(za potvrdu, nije obavezno)</small></span><input name="email" type="email" autocomplete="email"></label>
+   <label class="field field--full"><span>Napomena</span><textarea name="napomena" rows="2" placeholder="npr. vozilo vuče u stranu"></textarea></label>
+  </div>
+  <button class="btn btn--go btn--block btn--lg" type="submit"><span>Pošalji zahtev za termin</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+ </form>
+</section>
+  <div class="sec__head"><p class="km">Cenovnik</p><h2 class="d2" id="cenovnik">Cenovnik usluga</h2></div>
   <nav class="jump" aria-label="Grupe usluga"><a href="#demontaza-i-montaza">Demontaža i montaža</a><a href="#vulkanizerske-usluge">Vulkanizerske usluge</a><a href="#balansiranje">Balansiranje</a><a href="#reglaza">Reglaža</a><a href="#brzi-servis">Brzi servis</a></nav>
   <div class="pricelists"><section class="pricelist" id="demontaza-i-montaza" data-reveal><h3 class="d4">Demontaža i montaža</h3>
 <table><thead><tr><th scope="col">Usluga</th><th scope="col">Cena</th></tr></thead><tbody>
@@ -105,7 +135,8 @@
    <p class="label label--light">Guma Servis</p>
    <p class="big">Dr. Dragiše Mišovića 100<br>32000 Čačak, Srbija</p>
    <ul class="hours hours--light"><li><span>Radnim danima</span><b>08–18h</b></li><li><span>Subotom</span><b>08–16h</b></li></ul>
-   <a class="btn btn--go btn--block" href="tel:+381325461011"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><span>Pozovite — opcija 3</span></a>
+   <a class="btn btn--go btn--block" href="#zakazivanje"><span>Zakažite termin</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+   <a class="btn btn--line-light btn--block" href="tel:+381325461011"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><span>Pozovite — opcija 3</span></a>
    <a class="btn btn--line-light btn--block" href="https://maps.google.com/maps/dir//Guma+servis+Dr.+Dragi%C5%A1e+Mi%C5%A1ovic%CC%81a+96+%C4%8Ca%C4%8Dak+32000/@43.8855441,20.355595,17z/data=!4m5!4m4!1m0!1m2!1m1!1s0x4757730d194668ad:0x4ca53a5e60b1878d" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span>Putanja do servisa</span></a>
    <p class="fine">Servis za teretna vozila: Bulevar oslobodilaca Čačka 84, radnim danima 08–16h, subotom 08–14h.</p>
   </div>
@@ -176,6 +207,6 @@
  </aside>
 </div>
 <div class="toast" role="status" aria-live="polite" data-toast hidden></div>
-<script type="module" src="assets/js/core.js?v=c01480f6"></script>
+<script type="module" src="assets/js/core.js?v=79e6ef01"></script>
 </body>
 </html>
