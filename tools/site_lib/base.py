@@ -7,6 +7,8 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from . import seo
+
 ROOT = Path(__file__).resolve().parent.parent.parent
 DATA = ROOT / 'data'
 UPLOADS = 'https://cajkam.rs/wp-content/uploads/'
@@ -15,6 +17,8 @@ PRODUCTS = json.loads((DATA / 'products.json').read_text(encoding='utf-8'))
 POSTS = json.loads((DATA / 'posts.json').read_text(encoding='utf-8'))
 PAGES = json.loads((DATA / 'pages.json').read_text(encoding='utf-8'))
 BRANDS = json.loads((DATA / 'brands.json').read_text(encoding='utf-8'))
+for _p in POSTS:
+    seo.POST_PATH[f"blog/{_p['slug']}.html"] = _p['date'].replace('-', '/') + f"/{_p['slug']}/"
 
 esc = html.escape
 R = '{R}'  # replaced per page with the relative path to the site root
@@ -241,7 +245,8 @@ VEHICLES = {
 
 
 def icon(name, cls='i'):
-    return f'<svg class="{cls}" aria-hidden="true"><use href="#i-{name}"/></svg>'
+    # {R} is resolved per page in page(); one shared sprite file keeps every page small
+    return f'<svg class="{cls}" aria-hidden="true"><use href="{R}assets/img/icons.svg#i-{name}"/></svg>'
 
 
 def vehicle(name, cls='veh'):
@@ -249,10 +254,12 @@ def vehicle(name, cls='veh'):
             f'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{VEHICLES[name]}</svg>')
 
 
-def sprite():
-    return ('<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + ''.join(
+def write_sprite():
+    """All icons as <symbol>s in one file; pages reference assets/img/icons.svg#i-<name>."""
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg">' + ''.join(
         f'<symbol id="i-{k}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
         f'stroke-linecap="round" stroke-linejoin="round">{v}</symbol>' for k, v in ICONS.items()) + '</svg>')
+    (ROOT / 'assets' / 'img' / 'icons.svg').write_text(svg, encoding='utf-8')
 
 
 # --------------------------------------------------------------- tread patterns
@@ -448,7 +455,8 @@ def footer(Rp):
     </ul>
     <h3>Radno vreme</h3><ul class="ftr__hours">{hours}</ul>
    </div>
-   <div><h3>Korisnički servis</h3><ul class="ftr__list">{pol}</ul></div>
+   <div><h3>Gume</h3><ul class="ftr__list">{''.join(f'<li><a href="{Rp}kategorija-proizvoda/{c}/">{t} gume</a></li>' for c, t, _, _ in CATS)}</ul>
+    <h3>Korisnički servis</h3><ul class="ftr__list">{pol}</ul></div>
    <div><h3>Prodavnica</h3><ul class="ftr__list">{sitemap}<li><a href="{Rp}nalog.html">Moj nalog</a></li><li><a href="{BIZ['b2b']}" rel="noopener">B2B portal {icon('arrow-ne')}</a></li></ul></div>
   </div>
  </div>
@@ -461,11 +469,55 @@ FONTS = ('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,
          '&family=Inter:wght@400;500;600;700&display=swap')
 
 
-def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra=''):
-    depth = path.count('/')
-    Rp = '../' * depth
-    desc = desc or ('Online prodaja guma — Čajka M Čačak. Putničke, poluteretne, teretne, industrijske i '
+LOCAL_PAGES = {'', 'kontakt/', 'guma-servis/', 'hotel-za-gume/', 'o-nama/'}
+
+
+def descriptions():
+    return {
+        'index.html': f'Online prodaja guma Čajka M iz Čačka: {n(len(TIRES))} guma za automobile, kombije, kamione i mašine, {n(len(IN_STOCK))} odmah na stanju. Guma Servis i hotel za gume.',
+        'gume.html': f'Katalog guma Čajka M: {n(len(TIRES))} guma za automobile, kombije, kamione, viljuškare i traktore. Filtrirajte po dimenziji, sezoni, proizvođaču i ceni.',
+        'akcije.html': f'Gume na akciji u Čajka M: {len(ON_SALE)} modela sa sniženom cenom, do {MAX_DISCOUNT} % popusta. Cene po komadu sa PDV-om, dostava 1-3 radna dana.',
+        'servis.html': 'Guma Servis u Čačku, Dr. Dragiše Mišovića 100: montaža i balansiranje od 400 RSD, reglaža trapa, vulkanizerske usluge i brzi servis. Zakažite termin.',
+        'hotel-za-gume.html': 'Hotel za gume u Čačku: čuvanje guma svih vrsta i veličina, 600 RSD po komadu za jednu sezonu, uz montažu i balansiranje u Guma Servisu.',
+        'brendovi.html': 'Brendovi guma u ponudi Čajka M: Continental, Goodyear, Michelin, Sava, Tigar i drugi. Ovlašćeni uvoznik brendova Kama i Voltyre.',
+        'blog.html': 'Saveti o gumama: izbor, oznake, pritisak, čuvanje i sezonska zamena guma. Blog Čajka M iz Čačka.',
+        'o-nama.html': 'Čajka M iz Čačka, osnovana 1992: uvoz i prodaja pneumatika u Srbiji i regionu. SRPS ISO 9001:2015 i 14001:2015, uvoznik Kama i Voltyre.',
+        'kontakt.html': f'Kontakt Čajka M: {BIZ["address"]} i Guma Servis, {BIZ["service_address"]}, Čačak. Tel. {BIZ["phone"]}, radno vreme i mapa.',
+        'cesta-pitanja.html': 'Česta pitanja o kupovini guma u Čajka M: poručivanje, isporuka 1-3 radna dana, plaćanje pouzećem, garancija i reklamacije.',
+        'reklamacije.html': 'Reklamacije na gume kupljene u Čajka M: postupak, potrebni podaci i obrazac za prijavu reklamacije.',
+        'uslovi-isporuke.html': 'Uslovi isporuke guma kupljenih u online prodavnici Čajka M: rokovi i način dostave.',
+        'zastita-potrosaca.html': 'Zaštita potrošača u Čajka M: prava kupaca pri kupovini guma na daljinu.',
+        'uslovi-koriscenja.html': 'Uslovi korišćenja i prodaje online prodavnice guma Čajka M iz Čačka.',
+        'politika-privatnosti.html': 'Politika privatnosti Čajka M: kako prikupljamo, koristimo i čuvamo podatke kupaca.',
+        'korpa.html': 'Vaša korpa u online prodavnici guma Čajka M.', 'kasa.html': 'Poručivanje guma u online prodavnici Čajka M.',
+        'nalog.html': 'Prijava i registracija kupaca Čajka M.', 'uporedi.html': 'Uporedite do četiri gume jednu pored druge.',
+    }
+
+
+def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='', ld=(), og_image=None,
+         og_type='website', noindex=None, sitemap='strane', images=()):
+    """Write one page. `path` is the template name (gume.html, blog/<slug>.html,
+    kupi-gume/<slug>/index.html …); seo.out_file() maps it to its public address."""
+    out_path = seo.out_file(path)
+    Rp = '../' * out_path.count('/')
+    pub = seo.clean(out_path)
+    page_url = seo.public(pub)
+    canon = seo.canonical(pub)
+    if noindex is None:
+        noindex = pub in seo.NOINDEX
+    desc = desc or descriptions().get(path) or ('Online prodaja guma - Čajka M Čačak. Putničke, poluteretne, teretne, industrijske i '
                     'poljoprivredne gume, Guma Servis i hotel za gume.')
+    og_img = og_image or seo.public('assets/img/og-cajkam.jpg')
+    social = f'''<link rel="canonical" href="{esc(canon)}">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="Čajka M">
+<meta property="og:locale" content="sr_RS">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="{esc(canon)}">
+<meta property="og:image" content="{esc(og_img)}">
+<meta name="twitter:card" content="summary_large_image">'''
+    robots = '<meta name="robots" content="noindex, follow">' + chr(10) if noindex else ''
     # One module per page. Page modules import ./core.js themselves; loading
     # core.js as well would create a second instance (double clicks).
     mod = scripts[0] if scripts else 'core'
@@ -476,6 +528,7 @@ def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
+{robots}{social}
 <meta name="theme-color" content="#101416">
 <meta name="view-transition" content="same-origin">
 <link rel="icon" href="{Rp}assets/img/favicon.svg" type="image/svg+xml">
@@ -484,24 +537,35 @@ def page(path, title, body, active='', desc='', scripts=(), cls='', head_extra='
 <link rel="stylesheet" href="{Rp}assets/css/site.css?v={VER}">
 <script>document.documentElement.classList.add('js');try{{var q=location.search;if(/[?&]motion=0/.test(q))sessionStorage.setItem('cm.motion','0');if(/[?&]motion=1/.test(q))sessionStorage.removeItem('cm.motion');if(sessionStorage.getItem('cm.motion')==='0')document.documentElement.classList.add('calm')}}catch(e){{}}</script>
 {head_extra}
+<!--LD-->
 </head>
 <body class="{cls}">
-{sprite()}
 {header(Rp, active)}
 <main id="main">
-{body.replace('{R}', Rp)}
+{body}
 </main>
 {footer(Rp)}
 {drawer(Rp)}
 <script type="module" src="{Rp}assets/js/{mod}.js?v={VER}"></script>
 </body>
 </html>'''
+    doc = doc.replace('{R}', Rp)
+    if Rp:
+        # templates were written with root-relative links ("gume.html", "assets/…"); pages now
+        # live in sub-folders, so anchor every plain relative reference at the site root
+        doc = re.sub(r'(href|action|src)="(?!\.\./|/|#|[a-z]+:)([^"]+)"', lambda m: f'{m.group(1)}="{Rp}{m.group(2)}"', doc)
+        doc = re.sub(r"url\((?!['\"]?(?:\.\./|/|[a-z]+:))", f'url({Rp}', doc)
+    doc = seo.route_links(doc)
     # house style: a plain hyphen instead of the em dash, everywhere (templates and imported texts)
     doc = doc.replace('&mdash;', '-').replace('—', '-')
-    out = ROOT / path
+    graph = seo.org_graph(BIZ) + (seo.local_graph(BIZ) if pub in LOCAL_PAGES else []) + seo.breadcrumb_graph(doc, page_url) + list(ld)
+    doc = doc.replace('<!--LD-->', seo.ld_script(graph))
+    out = ROOT / out_path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding='utf-8')
-    return path
+    if not noindex and pub not in ('404.html',):
+        seo.SITEMAP.append((pub, sitemap, list(images)))
+    return out_path
 
 
 # --------------------------------------------------------------- building blocks
@@ -675,3 +739,4 @@ def favicon():
            f'<path fill="#F2B51C" transform="scale(.95)" d="{SEAGULL}"/></svg>')
     (ROOT / 'assets' / 'img' / 'favicon.svg').write_text(svg, encoding='utf-8')
     write_treads()
+    write_sprite()

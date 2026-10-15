@@ -1173,3 +1173,17 @@ table { border-collapse: collapse; width: 100%; }
 .svcpage .booking { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 1280px) { .svcpage .booking { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); } }
 @media (max-width: 900px) { .booking { grid-template-columns: minmax(0, 1fr); } }
+
+/* ------------------------------------------------------------------ static listings (categories, brands) */
+.listing .toolbar { justify-content: space-between; margin-bottom: 18px; }
+.listing__grid { margin-top: 8px; }
+.pager { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 36px; }
+.pager__nums { display: flex; align-items: center; gap: 4px; }
+.pager a { display: inline-grid; place-items: center; min-width: 42px; height: 42px; padding: 0 12px; border-radius: var(--r-s); background: #fff; text-decoration: none; font: 700 17px/1 var(--fd); letter-spacing: .04em; transition: background .2s, color .2s; }
+.pager a:hover { background: var(--ink); color: #fff; }
+.pager a[aria-current] { background: var(--go); color: var(--ink); }
+.pager__step { display: inline-flex !important; gap: 8px; text-transform: uppercase; }
+.pager__step .i { width: 16px; height: 16px; }
+.pager__gap { padding: 0 4px; color: var(--mute); }
+@media (max-width: 560px) { .pager__step span { display: none; } }
+.pdp__desc { margin-top: 18px; font-size: 14.5px; line-height: 1.6; color: var(--mute); }

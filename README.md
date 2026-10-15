@@ -9,6 +9,8 @@ python tools/import.py --fetch    # re-download products, posts and pages from c
 python tools/build.py             # concatenates assets/css/src/*.css and writes every page to the project root
 python tools/audit.py             # every local link/asset resolves, one <h1> per page
 python tools/serve.py 5188        # preview on http://localhost:5188  (launch.json: "cajka-m-v2")
+python tools/live_urls.py         # refresh the list of addresses that exist on the current cajkam.rs
+python tools/logos.py             # rebuild the trimmed brand logos
 ```
 
 Python only, with no Node and no JS build step. The front end is plain ES modules and one generated stylesheet.
@@ -101,6 +103,38 @@ run three months ahead. Sundays are refused. Times follow the Guma Servis hours:
 Saturday 08:00–15:00. The tyre fields (dimension, where the tyres are) stay in place and are only switched off
 for alignment, so the form never changes height. Like the other forms, it validates and then says plainly that
 nothing was sent; it needs connecting to e-mail or a booking system.
+
+## SEO and addresses (ready for the move to cajkam.rs)
+
+The site uses the **same addresses as the current WordPress cajkam.rs**, so the move needs almost no redirects:
+`kupi-gume/<slug>/` (one static page per tyre, 5,267), `kategorija-proizvoda/<x>/` and `proizvodjac/<x>/` (with
+`page/N/` pagination), `guma-servis/`, `kontakt/`, `najcesce-postavljana-pitanja/`, `YYYY/MM/DD/<post>/`, `cart/`,
+`checkout/`, `my-account/`. Every product slug in the data matches its current cajkam.rs address.
+
+Everything lives in `tools/site_lib/seo.py`:
+
+- **`SITE_URL` / `CANONICAL_BASE` / `SWITCHED`.** While `SWITCHED = False` (preview on GitHub Pages), a page that
+  already exists on cajkam.rs (`data/live-urls.txt`, refreshed with `python tools/live_urls.py`, plus every
+  product) points its canonical at that cajkam.rs address, so the preview never competes with the live shop.
+  Pages that are new in the redesign point at themselves on github.io. **On the move: set `SWITCHED = True`,
+  rebuild, deploy.**
+- **Structured data (JSON-LD) on every page:** Organization + WebSite (with site search), BreadcrumbList; TireShop +
+  AutoRepair (both locations, hours, coordinates) on the home, contact, service, hotel and about pages; Product +
+  Offer (RSD price, stock) on tyre pages; ItemList on category/brand pages; BlogPosting; FAQPage.
+- **Head tags:** canonical, unique title and description, Open Graph/Twitter with `assets/img/og-cajkam.jpg`
+  (made from the hero still by the build). `noindex` on cart, checkout, account, compare and 404.
+- **Crawl files for cajkam.rs:** `sitemap.xml` (index → `sitemap-strane.xml`, `sitemap-proizvodi.xml` with
+  product photos, `sitemap-clanci.xml`), `robots.txt`, `llms.txt`, and `.htaccess` with 301s for the few old
+  addresses that change (`REDIRECTS` in seo.py, e.g. `kako-do-nas/` → `kontakt/#kako-do-nas`). A project site on
+  github.io cannot use robots.txt or a sitemap at its root, so these only take effect on cajkam.rs.
+- **Old preview addresses** (`gume.html`, `blog/<slug>.html`, `guma.html?p=<slug>`) forward to the new ones.
+- **Prices are a snapshot.** Static pages show price and stock at build time:
+  `python tools/import.py --fetch && python tools/build.py` regularly (daily is ideal) and before the move.
+
+Before switching off WordPress: product photos and brand logos load from `cajkam.rs/wp-content/uploads/`. Keep
+that folder on the server, or move the images into the site first. After the move, verify the domain in Google
+Search Console, submit `https://cajkam.rs/sitemap.xml`, and check both Google Business Profiles (shop and Guma
+Servis) against the addresses, phones and hours on the site.
 
 ## Content and honesty
 

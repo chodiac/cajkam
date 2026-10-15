@@ -8,7 +8,10 @@ const SPEED = { J: 100, K: 110, L: 120, M: 130, N: 140, P: 150, Q: 160, R: 170, 
 const OUT_OF_STOCK = 'Proizvod trenutno nije na zalihama. Molimo vas da nas pozovete za više informacija na broj: 032/546-10-11';
 
 const pdp = $('[data-pdp]');
-const slug = new URLSearchParams(location.search).get('p');
+// Static pages (kupi-gume/<slug>/) carry their slug; the old guma.html?p=<slug> forwards there.
+const STATIC = !!pdp.dataset.slug;
+const slug = pdp.dataset.slug || new URLSearchParams(location.search).get('p');
+if (!STATIC && slug) location.replace(url(`guma.html?p=${slug}`));
 
 (async () => {
   const { list, bySlug, byId } = await loadProducts();
@@ -27,9 +30,9 @@ function missing() {
 
 function render(p, list) {
   const title = `${p.sz} ${p.b} ${p.m}`.trim();
-  document.title = `${title} - Čajka M`;
-  $('meta[name="description"]').content = `${title}${p.z ? `, ${SEASON[p.z].toLowerCase()} guma` : ''}. ${p.np ? 'Cena na upit' : `${rsd(p.p)} sa PDV-om`}. ${p.st ? 'Na stanju.' : ''}`;
-  $('[data-crumbs]', pdp).insertAdjacentHTML('beforeend',
+  if (!STATIC) document.title = `${title} - Čajka M`;
+  if (!STATIC) $('meta[name="description"]').content = `${title}${p.z ? `, ${SEASON[p.z].toLowerCase()} guma` : ''}. ${p.np ? 'Cena na upit' : `${rsd(p.p)} sa PDV-om`}. ${p.st ? 'Na stanju.' : ''}`;
+  if (!STATIC) $('[data-crumbs]', pdp).insertAdjacentHTML('beforeend',
     `<li><a href="${url(`gume.html?tip=${p.c}`)}">${CATS[p.c]}</a></li><li aria-current="page">${esc(p.sz)}</li>`);
 
   const im = $('[data-pdp-img]', pdp);

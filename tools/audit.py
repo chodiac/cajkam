@@ -16,6 +16,8 @@ for page in pages:
     if '{R}' in html:
         bad.append(f'{page.name}: unreplaced {{R}}')
     h1 = len(re.findall(r'<h1[\s>]', html))
+    if 'http-equiv="refresh"' in html:  # forwarding stub for an old preview address
+        continue
     if h1 != 1 and page.name not in ('guma.html',):  # pdp swaps its h1 on a missing product
         bad.append(f'{page.relative_to(ROOT)}: {h1} <h1>')
     for ref in re.findall(r'(?:href|src)="([^"#]+)', html):
@@ -23,6 +25,8 @@ for page in pages:
         if u.scheme or ref.startswith(('mailto:', 'tel:', '//', 'data:')):
             continue
         target = (page.parent / u.path).resolve()
+        if target.is_dir():  # folder addresses (kupi-gume/<slug>/) are served as index.html
+            target = target / 'index.html'
         checked += 1
         if not target.exists():
             bad.append(f'{page.relative_to(ROOT)} -> {ref}')

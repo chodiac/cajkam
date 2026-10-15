@@ -46,7 +46,8 @@ def catalog(path, title, preset='', lede='', active='gume', label='Katalog', no=
  <a class="cmpbar" href="uporedi.html" data-cmpbar hidden>{icon('compare')}<span data-cmpbar-t></span><b>Uporedi {icon('arrow')}</b></a>
 </section>
 {explainer()}'''
-    return page(path, f'{title} — Čajka M', body, active=active, scripts=('catalog',), cls='is-shop')
+    titles = {'gume.html': 'Gume - online prodaja, cene i stanje | Čajka M Čačak', 'akcije.html': 'Gume na akciji - sniženja | Čajka M'}
+    return page(path, titles.get(path, f'{title} — Čajka M'), body, active=active, scripts=('catalog',), cls='is-shop')
 
 
 def product_page():

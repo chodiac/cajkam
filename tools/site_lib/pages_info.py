@@ -4,6 +4,8 @@ import re
 from .base import (logo_src, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
                    esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, post_card, relink, date_sr, todo)
 from .pages_home import hotel_stack
+from .pages_catalog import brand_slug
+from . import seo
 
 
 def slug(g):
@@ -127,7 +129,7 @@ def brands_page():
         art = (f'<img src="{logo_src(lg)}" alt="" loading="lazy" decoding="async">' if lg else
                f'<span class="brand__word">{esc(b)}</span>')
         meta = f'{n(c)} guma' if c else 'Na upit'
-        href = f'gume.html?brend={b}' if c else 'kontakt.html'
+        href = f'proizvodjac/{brand_slug(b)}/' if c else 'kontakt.html'
         L = b[0].upper()
         anchor = '' if L in letters else f' id="b-{L}"'
         letters.append(L)
@@ -163,7 +165,15 @@ def blog_pages():
 </div></article>
 <section class="sec sec--paper"><div class="wrap"><div class="sec__head"><h2 class="d2">Pročitajte još</h2><a class="more" href="{R}blog.html">Svi saveti {icon('arrow')}</a></div>
 <div class="grid grid--3">{''.join(post_card(q) for q in others)}</div></div></section>'''
-        page(f'blog/{p["slug"]}.html', f'{p["title"]} — Čajka M', body, active='blog', desc=p['excerpt'][:155], cls='is-article')
+        post_url = seo.canonical(seo.POST_PATH[f'blog/{p["slug"]}.html'])
+        article = {'@type': 'BlogPosting', 'headline': p['title'], 'datePublished': p['date'], 'inLanguage': 'sr-Latn',
+                   'mainEntityOfPage': post_url, 'author': {'@id': seo.CANONICAL_BASE + '#org'}, 'publisher': {'@id': seo.CANONICAL_BASE + '#org'},
+                   'description': p['excerpt'][:300]}
+        if p['img']:
+            article['image'] = p['img']
+        page(f'blog/{p["slug"]}.html', f'{p["title"]} — Čajka M', body, active='blog', desc=p['excerpt'][:155].rsplit(' ', 1)[0] + '…',
+             cls='is-article', ld=[article], og_type='article', og_image=p['img'] or None, sitemap='clanci',
+             images=[p['img']] if p['img'] else [])
 
 
 def about_page():
@@ -237,7 +247,10 @@ def faq_page():
                     for q, a in pairs)
     body = f'''{page_head('Česta pitanja', 'Poručivanje, isporuka, plaćanje i garancija — ukratko.', label='Korisnički servis')}
 <section class="sec sec--tight"><div class="wrap policy">{policy_nav('cesta-pitanja.html')}<div class="faqs">{items}</div></div></section>'''
-    return page('cesta-pitanja.html', 'Česta pitanja — Čajka M', body)
+    faq = {'@type': 'FAQPage', 'mainEntity': [
+        {'@type': 'Question', 'name': re.sub(r' +\?', '?', q.strip()),
+         'acceptedAnswer': {'@type': 'Answer', 'text': re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', a)).strip()}} for q, a in pairs]}
+    return page('cesta-pitanja.html', 'Česta pitanja — Čajka M', body, ld=[faq])
 
 
 def reklamacija_form():

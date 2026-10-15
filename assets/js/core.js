@@ -4,7 +4,25 @@ export const ROOT = doc.dataset.root || '';
 export const VER = doc.dataset.v || '';
 export const CALM = doc.classList.contains('calm');
 export const UPLOADS = 'https://cajkam.rs/wp-content/uploads/';
-export const url = (p) => ROOT + p;
+// Page names used in the code -> public addresses (same structure as cajkam.rs; mirrors
+// ROUTES in tools/site_lib/seo.py). Product links become kupi-gume/<slug>/.
+const ROUTES = {
+  'index.html': '', 'gume.html': 'kupi-gume/', 'akcije.html': 'akcije/', 'korpa.html': 'cart/', 'kasa.html': 'checkout/',
+  'nalog.html': 'my-account/', 'uporedi.html': 'uporedi/', 'servis.html': 'guma-servis/', 'hotel-za-gume.html': 'hotel-za-gume/',
+  'brendovi.html': 'brendovi/', 'blog.html': 'blog/', 'o-nama.html': 'o-nama/', 'kontakt.html': 'kontakt/',
+};
+export const url = (p) => {
+  const m = /^([\w-]+\.html)(\?[^#]*)?(#.*)?$/.exec(p);
+  if (m) {
+    const [, file, q = '', h = ''] = m;
+    if (file === 'guma.html') {
+      const slug = new URLSearchParams(q.slice(1)).get('p');
+      if (slug) return `${ROOT}kupi-gume/${encodeURIComponent(slug)}/${h}`;
+    }
+    if (file in ROUTES) return `${ROOT}${ROUTES[file]}${q}${h}` || './';
+  }
+  return ROOT + p;
+};
 export const $ = (s, el = document) => el.querySelector(s);
 export const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -25,7 +43,7 @@ export function gume(n, acc = false) {
   if (d === 1 && h !== 11) return acc ? 'gumu' : 'guma';
   return d >= 2 && d <= 4 && (h < 12 || h > 14) ? 'gume' : 'guma';
 }
-export const icon = (n, c = 'i') => `<svg class="${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+export const icon = (n, c = 'i') => `<svg class="${c}" aria-hidden="true"><use href="${ROOT}assets/img/icons.svg#i-${n}"/></svg>`;
 
 // ---------------------------------------------------------------- data
 let productsP, sizesP;
@@ -273,12 +291,12 @@ function initActions() {
       return;
     }
     const open = e.target.closest('[data-cart-open]');
-    if (open && cart.count() && !location.pathname.endsWith('korpa.html') && matchMedia('(min-width: 768px)').matches) {
+    if (open && cart.count() && !/\/cart\/$/.test(location.pathname) && matchMedia('(min-width: 768px)').matches) {
       e.preventDefault(); overlay($('[data-cartdrawer]'), true, open);
       return;
     }
     // the tyre photo morphs into the product page (cross-document view transition)
-    const toPdp = e.target.closest('.card a[href*="guma.html"]');
+    const toPdp = e.target.closest('.card a[href*="kupi-gume/"]');
     if (toPdp && 'onpagereveal' in window) {
       $$('.card__media img').forEach((i) => { i.style.viewTransitionName = ''; });
       const im = $('.card__media img', toPdp.closest('.card'));
