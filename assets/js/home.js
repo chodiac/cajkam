@@ -402,9 +402,11 @@ const PHASE = 6.5; // seconds per condition
   const b = $('[data-belt]');
   if (!b || CALM) return;
   let x = 0, v = 0, lastY = scrollY, hover = false, on = false, raf = 0, last = 0;
-  b.addEventListener('mouseenter', () => { hover = true; });
-  b.addEventListener('mouseleave', () => { hover = false; });
-  b.addEventListener('focusin', () => { hover = true; });
+  // Pause only for a real mouse or keyboard focus. A tap on a phone fires mouseenter but no
+  // mouseleave until you tap elsewhere, which used to freeze the belt; touch keeps it moving.
+  b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
+  b.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hover = false; });
+  b.addEventListener('focusin', (e) => { hover = e.target.matches(':focus-visible'); });
   b.addEventListener('focusout', () => { hover = false; });
   addEventListener('scroll', () => { v += Math.abs(scrollY - lastY) * .6; lastY = scrollY; }, { passive: true });
   const half = () => b.firstElementChild.offsetWidth;
