@@ -266,10 +266,12 @@
 .belt { display: flex; width: max-content; will-change: transform; }
 .belt__row { display: flex; align-items: center; gap: 12px; padding-right: 12px; }
 /* logos sit straight on the page: transparent, trimmed files from tools/logos.py */
-.brandlogo { display: grid; place-items: center; width: 190px; height: 72px; padding: 0 14px; border-radius: 10px; transition: transform .35s var(--ease); }
-.brandlogo img { max-width: 100%; max-height: 36px; width: auto; height: auto; object-fit: contain; filter: grayscale(1); opacity: .7; transition: filter .3s, opacity .3s; }
+.brandlogo { position: relative; display: grid; place-items: center; width: 190px; height: 72px; padding: 0 14px; border-radius: 10px; transition: transform .35s var(--ease); }
+.brandlogo img { grid-area: 1 / 1; }
+.brandlogo img { max-width: 100%; max-height: 36px; width: auto; height: auto; object-fit: contain; }
+.brandlogo .logo-mono { opacity: .7; }
 .brandlogo:hover, .brandlogo:focus-visible { transform: translateY(-3px); }
-.brandlogo:hover img, .brandlogo:focus-visible img { filter: none; opacity: 1; }
+
 .calm .belt { display: block; width: auto; max-width: var(--max); margin-inline: auto; padding-inline: var(--g); transform: none !important; }
 .calm .belt__row { justify-content: center; padding-right: 0; }
 .calm .belt__row { flex-wrap: wrap; }
@@ -373,7 +375,10 @@
 
 /* ------------------------------------------------------------------ visit */
 .visit { padding-block: clamp(64px, 8vw, 110px); }
-.visit__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; }
+.visit__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.visit__call { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px 40px; margin-bottom: 8px; }
+.visit__call .km, .visit__call .d2 { grid-column: 1; }
+.visit__call .visit__phone, .visit__call p:last-child { grid-column: 2; justify-self: end; }
 .visit__call .d2 { font-size: clamp(36px, 4.4vw, 64px); max-width: 12ch; }
 .visit__phone { display: inline-block; margin: 20px 0 10px; font: 800 clamp(34px, 4vw, 58px)/1 var(--fd); text-decoration: none; background: linear-gradient(var(--go), var(--go)) 0 88% / 100% 30% no-repeat; transition: background-size .4s var(--ease); }
 .visit__phone:hover { background-size: 100% 100%; }
@@ -384,7 +389,7 @@
 .hours li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
 .hours b { font-weight: 600; }
 .hours--light li { border-color: var(--line-l); }
-@media (max-width: 960px) { .visit__grid { grid-template-columns: 1fr 1fr; } .visit__call { grid-column: 1 / -1; } }
+@media (max-width: 960px) { .visit__grid { grid-template-columns: 1fr 1fr; } .visit__call { grid-template-columns: 1fr; } .visit__call .visit__phone, .visit__call p:last-child { grid-column: 1; justify-self: start; } }
 @media (max-width: 600px) { .visit__grid { grid-template-columns: 1fr; } }
 
 /* ------------------------------------------------------------------ footer */
@@ -427,3 +432,9 @@
   .hero__cond { top: 24px; }
   .hero__ctl { top: 76px; }
 }
+
+/* brand logos: ink silhouette at rest, the brand's own colours on hover / keyboard focus */
+.brandlogo .logo-color, .brand__logo .logo-color { opacity: 0; transition: opacity .35s var(--ease); }
+.logo-mono { transition: opacity .35s var(--ease); }
+.brandlogo:hover .logo-mono, .brandlogo:focus-visible .logo-mono, .brand:hover .brand__logo .logo-mono, .brand:focus-visible .brand__logo .logo-mono { opacity: 0; }
+.brandlogo:hover .logo-color, .brandlogo:focus-visible .logo-color, .brand:hover .brand__logo .logo-color, .brand:focus-visible .brand__logo .logo-color { opacity: 1; }

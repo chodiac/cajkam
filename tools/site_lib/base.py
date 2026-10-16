@@ -36,6 +36,9 @@ BIZ = {
     'service_address': 'Dr. Dragiše Mišovića 100', 'service_city': '32000 Čačak, Srbija',
     # kontakt says Sat 08-16h, kako-do-nas says Sat 09-16h: flagged in README, kontakt used.
     'service_hours': [('Radnim danima', '08–18h'), ('Subotom', '08–16h')],
+    # Truck service at the head office address (cajkam.rs/kontakt: "Servis za teretna vozila"), in Konjevići.
+    'truck_name': 'Servis u Konjevićima', 'truck_note': 'Servis za teretna vozila',
+    'truck_hours': [('Radnim danima', '08–16h'), ('Subotom', '08–14h')],
     'b2b': 'https://b2b.cajkam.rs/login',
     'maps_hq': 'https://maps.google.com/maps/dir//%C4%8Cajka+M+D.O.O.+Bulevar+oslobodilaca+84+%C4%8Ca%C4%8Dak+320000/@43.8885993,20.383495,18z/data=!4m5!4m4!1m0!1m2!1m1!1s0x475772459823a2bb:0x2a1cf7abe2db7278',
     'maps_service': 'https://maps.google.com/maps/dir//Guma+servis+Dr.+Dragi%C5%A1e+Mi%C5%A1ovic%CC%81a+96+%C4%8Ca%C4%8Dak+32000/@43.8855441,20.355595,17z/data=!4m5!4m4!1m0!1m2!1m1!1s0x4757730d194668ad:0x4ca53a5e60b1878d',
@@ -155,10 +158,18 @@ POPULAR_SIZES = [s for s, _ in popular.most_common(8)]
 BRAND_COUNT = len([b for b, c in BRANDS['counts'] if b and c])
 
 
-def logo_src(lg):
-    """Trimmed, transparent copy from tools/logos.py when present, else the shop's original."""
-    local = ROOT / 'assets' / 'img' / 'brands' / (Path(lg['logo']).stem + '.png')
-    return f'{R}assets/img/brands/{local.name}' if local.exists() else UPLOADS + lg['logo']
+def logo_src(lg, color=False):
+    """Trimmed, transparent copy from tools/logos.py when present (ink silhouette, or the
+    brand's own colours for hover), else the shop's original."""
+    sub = 'color/' if color else ''
+    local = ROOT / 'assets' / 'img' / 'brands' / sub / (Path(lg['logo']).stem + '.png')
+    return f'{R}assets/img/brands/{sub}{local.name}' if local.exists() else UPLOADS + lg['logo']
+
+
+def logo_pair(lg, alt=''):
+    """Silhouette + colour version stacked; CSS swaps them on hover/focus."""
+    return (f'<img class="logo-mono" src="{logo_src(lg)}" alt="{esc(alt)}" loading="lazy" decoding="async">'
+            f'<img class="logo-color" src="{logo_src(lg, True)}" alt="" aria-hidden="true" loading="lazy" decoding="async">')
 
 
 def cat_image(c):
@@ -474,14 +485,14 @@ LOCAL_PAGES = {'', 'kontakt/', 'guma-servis/', 'hotel-za-gume/', 'o-nama/'}
 
 def descriptions():
     return {
-        'index.html': f'Online prodaja guma Čajka M iz Čačka: {n(len(TIRES))} guma za automobile, kombije, kamione i mašine, {n(len(IN_STOCK))} odmah na stanju. Guma Servis i hotel za gume.',
+        'index.html': f'Online prodaja guma Čajka M iz Čačka: {n(len(TIRES))} guma za automobile, kombije, kamione i mašine. Guma Servis i hotel za gume u Čačku.',
         'gume.html': f'Katalog guma Čajka M: {n(len(TIRES))} guma za automobile, kombije, kamione, viljuškare i traktore. Filtrirajte po dimenziji, sezoni, proizvođaču i ceni.',
         'akcije.html': f'Gume na akciji u Čajka M: {len(ON_SALE)} modela sa sniženom cenom, do {MAX_DISCOUNT} % popusta. Cene po komadu sa PDV-om, dostava 1-3 radna dana.',
         'servis.html': 'Guma Servis u Čačku, Dr. Dragiše Mišovića 100: montaža i balansiranje od 400 RSD, reglaža trapa, vulkanizerske usluge i brzi servis. Zakažite termin.',
         'hotel-za-gume.html': 'Hotel za gume u Čačku: čuvanje guma svih vrsta i veličina, 600 RSD po komadu za jednu sezonu, uz montažu i balansiranje u Guma Servisu.',
-        'brendovi.html': 'Brendovi guma u ponudi Čajka M: Continental, Goodyear, Michelin, Sava, Tigar i drugi. Ovlašćeni uvoznik brendova Kama i Voltyre.',
+        'brendovi.html': 'Brendovi guma u ponudi Čajka M: Continental, Goodyear, Michelin, Sava, Tigar i drugi. Ovlašćeni uvoznik brendova Speedways i Tourador.',
         'blog.html': 'Saveti o gumama: izbor, oznake, pritisak, čuvanje i sezonska zamena guma. Blog Čajka M iz Čačka.',
-        'o-nama.html': 'Čajka M iz Čačka, osnovana 1992: uvoz i prodaja pneumatika u Srbiji i regionu. SRPS ISO 9001:2015 i 14001:2015, uvoznik Kama i Voltyre.',
+        'o-nama.html': 'Čajka M iz Čačka, osnovana 1992: uvoz i prodaja pneumatika u Srbiji i regionu. SRPS ISO 9001:2015 i 14001:2015, uvoznik Speedways i Tourador.',
         'kontakt.html': f'Kontakt Čajka M: {BIZ["address"]} i Guma Servis, {BIZ["service_address"]}, Čačak. Tel. {BIZ["phone"]}, radno vreme i mapa.',
         'cesta-pitanja.html': 'Česta pitanja o kupovini guma u Čajka M: poručivanje, isporuka 1-3 radna dana, plaćanje pouzećem, garancija i reklamacije.',
         'reklamacije.html': 'Reklamacije na gume kupljene u Čajka M: postupak, potrebni podaci i obrazac za prijavu reklamacije.',

@@ -153,7 +153,7 @@ table { border-collapse: collapse; width: 100%; }
 .hdr.is-scrolled { border-bottom-color: var(--line); }
 .hdr.is-hidden { transform: translateY(-100%); }
 .hdr__in { display: flex; align-items: center; gap: 20px; height: var(--hdr); }
-.logo img { width: 164px; height: auto; }
+.logo img { width: clamp(176px, 14vw, 212px); height: auto; }
 .nav { flex: 1; }
 .nav__list { display: flex; align-items: center; gap: 2px; }
 .nav__list > li { display: flex; align-items: center; }
@@ -200,7 +200,7 @@ table { border-collapse: collapse; width: 100%; }
   .hdr__in { gap: 12px; }
   .search:focus-within { right: var(--g); left: var(--g); width: auto; }
 }
-@media (max-width: 640px) { .logo img { width: 128px; } .tool__l { display: none; } .tool--cart { padding: 0 11px; min-width: 0; } .hdr__in { gap: 8px; } :root { --hdr: 60px; } }
+@media (max-width: 640px) { .logo img { width: 150px; } .tool__l { display: none; } .tool--cart { padding: 0 11px; min-width: 0; } .hdr__in { gap: 8px; } :root { --hdr: 60px; } }
 
 /* mega menu */
 .mega { position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 40px 60px -30px rgba(17, 21, 24, .35); animation: megaIn .45s var(--ease); clip-path: inset(0 0 0 0); }

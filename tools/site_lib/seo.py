@@ -165,7 +165,15 @@ def local_graph(biz):
         'geo': {'@type': 'GeoCoordinates', 'latitude': SERVICE_GEO[0], 'longitude': SERVICE_GEO[1]},
         'openingHoursSpecification': _hours(biz['service_hours']), 'priceRange': 'RSD', 'hasMap': biz['maps_service'],
     }
-    return [shop, service]
+    trucks = {
+        '@type': 'AutoRepair', '@id': CANONICAL_BASE + '#servis-konjevici', 'name': 'Čajka M - ' + biz['truck_name'],
+        'description': biz['truck_note'], 'parentOrganization': {'@id': CANONICAL_BASE + '#org'}, 'url': canonical('kontakt/'),
+        'image': public('assets/img/og-cajkam.jpg'), 'telephone': biz['phone'],
+        'address': _address(biz['address'], biz['city']),
+        'geo': {'@type': 'GeoCoordinates', 'latitude': HQ_GEO[0], 'longitude': HQ_GEO[1]},
+        'openingHoursSpecification': _hours(biz['truck_hours']), 'priceRange': 'RSD', 'hasMap': biz['maps_hq'],
+    }
+    return [shop, service, trucks]
 
 
 def breadcrumb_graph(doc, page_url):

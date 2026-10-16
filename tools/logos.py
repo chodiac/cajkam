@@ -97,9 +97,25 @@ def clean(im):
     return out
 
 
+def colour(im):
+    """The logo in its own colours for the hover state: trimmed, white canvas made transparent.
+    A logo's solid band (Barum yellow …) is part of the brand mark, so it stays."""
+    im = im.convert('RGBA')
+    rgb = Image.alpha_composite(Image.new('RGBA', im.size, (255, 255, 255, 255)), im).convert('RGB')
+    box = ImageChops.invert(rgb.convert('L')).point(lambda v: 255 if v > 18 else 0).getbbox()
+    if box:
+        rgb = rgb.crop(box)
+    out = rgb.convert('RGBA')
+    out.putalpha(silhouette(rgb, [(255, 255, 255)]).getchannel('A'))
+    k = min(1, 340 / out.width, 80 / out.height)
+    if k < 1:
+        out = out.resize((round(out.width * k), round(out.height * k)), Image.LANCZOS)
+    return out
+
+
 def main():
     brands = json.loads((ROOT / 'data' / 'brands.json').read_text(encoding='utf-8'))
-    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / 'color').mkdir(parents=True, exist_ok=True)
     done = 0
     for lg in brands['logos']:
         name = Path(lg['logo']).stem + '.png'
@@ -107,6 +123,7 @@ def main():
             im = Image.open(BytesIO(r.read()))
         # one ink colour + alpha: a 16-colour palette is visually lossless and tiny
         clean(im).quantize(colors=16, method=Image.Quantize.FASTOCTREE).save(OUT / name, optimize=True)
+        colour(im).quantize(colors=64, method=Image.Quantize.FASTOCTREE).save(OUT / 'color' / name, optimize=True)
         done += 1
     print('logos', done, '->', OUT)
 

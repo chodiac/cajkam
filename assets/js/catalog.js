@@ -103,12 +103,11 @@ function renderFacets() {
   const base = filter(state, ['cmin', 'cmax']).filter((p) => !p.np);
   const lo = base.length ? Math.floor(Math.min(...base.map((p) => p.p))) : 0;
   const hi = base.length ? Math.ceil(Math.max(...base.map((p) => p.p))) : 0;
-  const stN = filter(state, ['stanje']).filter((p) => p.st).length;
   const akN = filter(state, ['akcija']).filter(onSale).length;
 
   const openState = Object.fromEntries($$('.fgroup', facetsBox).map((g) => [g.dataset.group, g.open]));
   facetsBox.innerHTML = [
-    group('dost', 'Dostupnost', `<label class="switch"><span>Samo na stanju <small class="fine">(${num(stN)})</small></span><input type="checkbox" data-k="stanje"${state.stanje ? ' checked' : ''}></label>
+    group('dost', 'Dostupnost', `<label class="switch"><span>Samo na stanju</span><input type="checkbox" data-k="stanje"${state.stanje ? ' checked' : ''}></label>
       ${preset.has('akcija') ? '' : `<label class="switch"><span>Samo na akciji <small class="fine">(${num(akN)})</small></span><input type="checkbox" data-k="akcija"${state.akcija ? ' checked' : ''}></label>`}`),
     group('tip', 'Tip gume', options('tip', tipE, CATS)),
     group('brend', 'Proizvođač', `<input class="fgroup__search" type="search" placeholder="Pronađi proizvođača" aria-label="Pronađi proizvođača" data-brand-q value="${esc(brandQuery)}">
@@ -161,8 +160,7 @@ let results = [];
 function renderResults(reset = true) {
   if (reset) shown = PAGE;
   results = filter(state).sort(SORTS[state.sort] || SORTS.rec);
-  const inStock = results.filter((p) => p.st).length;
-  countEl.innerHTML = `<b>${num(results.length)}</b> ${gume(results.length)}${results.length ? ` · ${num(inStock)} na stanju` : ''}`;
+  countEl.innerHTML = `<b>${num(results.length)}</b> ${gume(results.length)}`;
   $('[data-filters-apply]', root).textContent = results.length ? `Prikaži ${num(results.length)} ${gume(results.length, true)}` : 'Nema rezultata';
   grid.classList.toggle('is-list', state.prikaz === 'list');
   $$('[data-view]', root).forEach((b) => b.setAttribute('aria-pressed', b.dataset.view === (state.prikaz || 'grid')));

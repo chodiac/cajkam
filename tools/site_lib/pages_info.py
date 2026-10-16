@@ -1,7 +1,7 @@
 """Service, hotel, brands, blog, about, contact and policy pages."""
 import re
 
-from .base import (logo_src, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
+from .base import (logo_src, logo_pair, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
                    esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, post_card, relink, date_sr, todo)
 from .pages_home import hotel_stack
 from .pages_catalog import brand_slug
@@ -75,7 +75,7 @@ def service_page():
    <a class="btn btn--go btn--block" href="#zakazivanje"><span>Zakažite termin</span>{icon('arrow')}</a>
    <a class="btn btn--line-light btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>Pozovite — opcija 3</span></a>
    <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja do servisa</span></a>
-   <p class="fine">Servis za teretna vozila: {BIZ['address']}, radnim danima 08–16h, subotom 08–14h.</p>
+   <p class="fine"><b>{BIZ['truck_name']}</b> ({BIZ['truck_note'].lower()}): {BIZ['address']}, radnim danima 08–16h, subotom 08–14h.</p>
   </div>
  </aside>
 </div></section>'''
@@ -126,7 +126,7 @@ def brands_page():
     for b in names:
         lg = logos.get(b)
         c = counts.get(b, 0)
-        art = (f'<img src="{logo_src(lg)}" alt="" loading="lazy" decoding="async">' if lg else
+        art = (f'<span class="brand__logo">{logo_pair(lg)}</span>' if lg else
                f'<span class="brand__word">{esc(b)}</span>')
         meta = f'{n(c)} guma' if c else 'Na upit'
         href = f'proizvodjac/{brand_slug(b)}/' if c else 'kontakt.html'
@@ -135,7 +135,7 @@ def brands_page():
         letters.append(L)
         tiles.append(f'<a class="brand{" brand--ask" if not c else ""}" href="{href}"{anchor} data-reveal>{art}<span class="brand__n"><b>{esc(b)}</b><small>{meta}</small></span></a>')
     az = ''.join(f'<a href="#b-{L}">{L}</a>' for L in dict.fromkeys(letters))
-    body = f'''{page_head('Brendovi', 'Sarađujemo sa svetski priznatim proizvođačima. Ovlašćeni smo uvoznik brendova Kama i Voltyre.', label='Proizvođači')}
+    body = f'''{page_head('Brendovi', 'Sarađujemo sa svetski priznatim proizvođačima. Ovlašćeni smo uvoznik brendova Speedways i Tourador.', label='Proizvođači')}
 <section class="sec sec--tight"><div class="wrap">
  <nav class="az" aria-label="Po slovu">{az}</nav>
  <div class="brands-grid">{''.join(tiles)}</div>
@@ -190,7 +190,7 @@ def about_page():
  </div>
  {media_slot('Magacin i tim Čajka M, Bulevar oslobodilaca Čačka 84', '21/9', 'slot--wide', 'hotel')}
  <div class="about__offer">
-  <div>{km(4, 'Ponuda')}<h2 class="d2">Ovlašćeni uvoznik Kama i Voltyre</h2><p>U ponudi su i Sava, Tigar, Michelin, Goodyear, Dunlop, Nokian i drugi proizvođači — za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.</p>
+  <div>{km(4, 'Ponuda')}<h2 class="d2">Ovlašćeni uvoznik Speedways i Tourador</h2><p>U ponudi su i Sava, Tigar, Michelin, Goodyear, Dunlop, Nokian i drugi proizvođači — za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.</p>
   <div class="about__links"><a class="btn btn--ink" href="{R}brendovi.html"><span>Brendovi</span>{icon('arrow')}</a><a class="btn btn--line" href="{BIZ['b2b']}" rel="noopener"><span>B2B portal za partnere</span>{icon('arrow-ne')}</a></div></div>
   <ul class="about__nums">{''.join(f'<li data-reveal><b data-countup>{n(CAT_COUNT[c])}</b><span>{t}</span></li>' for c, t in (('putnicke', 'putničkih'), ('poluteretne', 'poluteretnih'), ('teretne', 'teretnih'), ('poljoprivredne', 'poljoprivrednih')))}</ul>
  </div>
@@ -228,8 +228,9 @@ def contact_page():
  {booking_form(2)}
  <div class="sec__head" id="kako-do-nas">{km(2, 'Lokacije')}<h2 class="d2">Kako do nas</h2></div>
  <div class="locs">
-  {loc('Čajka M — prodaja', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'], '<p class="fine">Ovde je i servis za teretna vozila.</p>')}
+  {loc('Čajka M — prodaja', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'])}
   {loc('Guma Servis', BIZ['service_address'] + ',', BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['embed_service'])}
+  {loc(BIZ['truck_name'], BIZ['address'] + ',', BIZ['city'], BIZ['truck_hours'], BIZ['maps_hq'], BIZ['embed_hq'], f'<p class="fine">{BIZ["truck_note"]}. Telefon centrale, opcija 3.</p>')}
  </div>
 </div></section>'''
     return page('kontakt.html', 'Kontakt i kako do nas — Čajka M Čačak', body, active='kontakt')

@@ -2,7 +2,7 @@
 from .base import (ROOT, R, BIZ, CATS, SEASONS, RECOMMENDED, SERVICES, TIRES, IN_STOCK, ON_SALE, CAT_COUNT, CAT_STOCK,
                    SEASON_STOCK, BY_SLUG, MAX_DISCOUNT, POPULAR_SIZES, BRANDS, BRAND_COUNT, POSTS, UPLOADS,
                    esc, fmt, n, numkey, icon, vehicle, km, card, rail, media_slot, post_card, explainer, page,
-                   size_query, cat_image, img_url, todo, logo_src)
+                   size_query, cat_image, img_url, todo, logo_src, logo_pair)
 
 
 def hero():
@@ -28,7 +28,7 @@ def hero():
  <div class="wrap hero__top">
   {km(0, 'Čajka M · Čačak, od 1992.', light=True)}
   <h1 id="hero-t" class="hero__t"><span class="ln"><span>Drži</span></span> <span class="ln"><span>put.</span></span></h1>
-  <p class="hero__lede">Gume za automobile, kombije, kamione i radne mašine. {n(len(IN_STOCK))} modela je odmah na stanju — izaberite dimenziju i pogledajte šta imamo.</p>
+  <p class="hero__lede">Gume za automobile, kombije, kamione i radne mašine - izaberite dimenziju i pogledajte šta imamo u ponudi.</p>
  </div>
  <div class="hero__cond" aria-hidden="true">
   <span class="hero__cond-i" data-cond-icon>{icon('sun')}</span><span data-cond-label>Suv asfalt</span>
@@ -76,7 +76,7 @@ def categories():
  <span class="catcard__veh">{vehicle(v)}</span>
  <span class="catcard__t">{t}</span>
  <span class="catcard__d">{d}</span>
- <span class="catcard__n"><b>{n(CAT_COUNT[c])}</b> guma · {n(CAT_STOCK[c])} na stanju</span>
+ <span class="catcard__n"><b>{n(CAT_COUNT[c])}</b> guma u ponudi</span>
  <span class="catcard__go" aria-hidden="true">{icon('arrow')}</span>
 </a>''')
     return f'''
@@ -106,7 +106,7 @@ def tread_section():
  <p class="tstep__cond">{copy[s][1]}</p>
  <div class="tstep__band" aria-hidden="true" style="background-image:url(assets/img/tread-{s}.svg)"></div>
  <p class="tstep__x">{copy[s][3]}</p>
- <a class="btn btn--line-light" href="gume.html?sezona={s}"><span>{n(SEASON_STOCK[s])} na stanju — pogledaj</span>{icon('arrow')}</a>
+ <a class="btn btn--line-light" href="gume.html?sezona={s}"><span>Pogledaj {copy[s][2].lower()}</span>{icon('arrow')}</a>
 </article>''' for s in order)
     layers = ''.join(f'<div class="tv__pat" data-pat="{s}" style="background-image:url(assets/img/tread-{s}.svg)"></div>' for s in order)
     prints = ''.join(f'<div class="tv__print" data-print="{s}" style="background-image:url(assets/img/tread-{s}.svg)"></div>' for s in order)
@@ -159,14 +159,14 @@ def offers():
 def brands():
     logos = [lg for lg in BRANDS['logos'] if lg['count']] + [lg for lg in BRANDS['logos'] if not lg['count']]
     row = ''.join(f'<a class="brandlogo" href="{"gume.html?brend=" + lg["brand"] if lg["brand"] else "brendovi.html"}">'
-                  f'<img src="{logo_src(lg)}" alt="{esc(lg["name"])}" loading="lazy" decoding="async"></a>'
+                  f'{logo_pair(lg, lg["name"])}</a>'
                   for lg in logos)
     return f'''
 <section class="brands" aria-labelledby="brands-t">
  <div class="wrap brands__head">
   {km(5, 'Brendovi')}
   <h2 id="brands-t" class="d2" data-split>{BRAND_COUNT} proizvođača u ponudi</h2>
-  <p>Ovlašćeni smo uvoznik brendova <b>Kama</b> i <b>Voltyre</b>. <a class="more" href="brendovi.html">Svi brendovi {icon('arrow')}</a></p>
+  <p>Ovlašćeni smo uvoznik brendova <b>Speedways</b> i <b>Tourador</b>. <a class="more" href="brendovi.html">Svi brendovi {icon('arrow')}</a></p>
  </div>
  <div class="belt" data-belt><div class="belt__row">{row}</div><div class="belt__row" aria-hidden="true">{row.replace('<a ', '<a tabindex="-1" ')}</div></div>
 </section>'''
@@ -255,7 +255,7 @@ def story():
    <li data-reveal><b>1992.</b><span>godina osnivanja</span></li>
    <li data-reveal><b>ISO 9001</b><span>upravljanje kvalitetom</span></li>
    <li data-reveal><b>ISO 14001</b><span>zaštita životne sredine</span></li>
-   <li data-reveal><b>Kama · Voltyre</b><span>ovlašćeni uvoznik</span></li>
+   <li data-reveal><b>Speedways · Tourador</b><span>ovlašćeni uvoznik</span></li>
   </ul>
   <div class="story__cta"><a class="more" href="o-nama.html">Naša priča {icon('arrow')}</a>
   <a class="more" href="{BIZ['b2b']}" rel="noopener">B2B portal za partnere {icon('arrow-ne')}</a></div>
@@ -286,8 +286,9 @@ def visit():
   <a class="visit__phone" href="tel:{BIZ['phone_href']}">{BIZ['phone']}</a>
   <p>Prodaja: <a href="tel:{BIZ['sales_href']}">{BIZ['sales']}</a> · <a href="mailto:prodaja@cajkam.rs">prodaja@cajkam.rs</a></p>
  </div>
- {loc('Čajka M — prodaja', BIZ['address'], BIZ['city'], BIZ['hours'], BIZ['maps_hq'], 'Ovde je i servis za teretna vozila.')}
+ {loc('Čajka M — prodaja', BIZ['address'], BIZ['city'], BIZ['hours'], BIZ['maps_hq'], 'Prodaja guma.')}
  {loc('Guma Servis', BIZ['service_address'], BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], 'Montaža, balansiranje, reglaža i hotel za gume.')}
+ {loc(BIZ['truck_name'], BIZ['address'], BIZ['city'], BIZ['truck_hours'], BIZ['maps_hq'], BIZ['truck_note'] + '. Telefon centrale, opcija 3.')}
 </div></section>'''
 
 
