@@ -115,7 +115,7 @@ function render(p, list) {
   const sameBox = $('[data-same]', pdp);
   if (same.length) {
     sameBox.innerHTML = same.slice(0, 12).map(cardHTML).join('');
-    $('[data-same-title]', pdp).innerHTML = `Još ${num(same.length)} ${gume(same.length)} u dimenziji <span class="sz">${esc(p.sz)}</span>`;
+    $('[data-same-title]', pdp).innerHTML = `Druge gume u dimenziji <span class="sz">${esc(p.sz)}</span>`;
     $('[data-same-link]', pdp).href = url(`gume.html?sirina=${p.w}${p.h ? `&visina=${p.h}` : ''}&precnik=${p.d}&tip=${p.c}`);
   } else sameBox.closest('.pdp__rel').hidden = true;
 

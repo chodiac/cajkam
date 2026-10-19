@@ -245,7 +245,7 @@ def account_page():
 
 
 def all_pages():
-    return [catalog('gume.html', 'Gume', lede=f'{n(len(TIRES))} guma za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.'),
+    return [catalog('gume.html', 'Gume', lede='Gume za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.'),
             catalog('akcije.html', 'Akcije', preset='akcija=1', active='akcije', label='Na popustu', no=3,
-                    lede=f'{len(ON_SALE)} modela na popustu — sniženja do {MAX_DISCOUNT} %. Cene su po komadu, sa PDV-om.'),
+                    lede=f'Modeli na popustu - sniženja do {MAX_DISCOUNT} %. Cene su po komadu, sa PDV-om.'),
             product_page(), cart_page(), checkout_page(), compare_page(), account_page()]

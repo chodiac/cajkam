@@ -1,7 +1,7 @@
 """Service, hotel, brands, blog, about, contact and policy pages."""
 import re
 
-from .base import (logo_src, logo_pair, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
+from .base import (logo_src, logo_pair, CATS, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
                    esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, post_card, relink, date_sr, todo)
 from .pages_home import hotel_stack
 from .pages_catalog import brand_slug
@@ -19,8 +19,8 @@ def booking_form(no=3):
  <div class="booking__intro">
   {km(no, 'Zakazivanje')}
   <h2 id="book-t" class="d2">Zakažite termin</h2>
-  <p>Reglaža trapa ili zamena guma u Guma Servisu, {BIZ['service_address']}. Pošaljite željeni termin — potvrđujemo ga telefonom.</p>
-  <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['service_hours'])}</ul>
+  <p>Reglaža trapa (Guma Servis) ili zamena guma u jednom od dva servisa. Pošaljite željeni termin — potvrđujemo ga telefonom.</p>
+  <ul class="hours hours--light"><li><span>Guma Servis</span><b>08–18h · sub 08–16h</b></li><li><span>Konjevići</span><b>08–16h · sub 08–14h</b></li></ul>
   <p class="fine">Nedeljom ne radimo. Hitno? <a href="tel:{BIZ['phone_href']}">{BIZ['phone']}</a>, opcija 3.</p>
  </div>
  <form class="box booking__form" data-booking data-demo-form data-success="Zahtev za termin je zabeležen. Termin potvrđujemo telefonom.">
@@ -35,6 +35,9 @@ def booking_form(no=3):
    <label class="field"><span>Telefon *</span><input name="tel" type="tel" required autocomplete="tel" placeholder="06x xxx xxxx"></label>
    <label class="field"><span>Vozilo (marka i model) *</span><input name="vozilo" required placeholder="npr. Škoda Octavia"></label>
    <label class="field"><span>Registarska oznaka</span><input name="reg" placeholder="ČA 123-AB"></label>
+   <label class="field field--full"><span>Servis *</span><select name="servis" required data-book-place>
+    <option value="guma-servis" data-close="18,16">Guma Servis - {BIZ['service_address']}</option>
+    <option value="konjevici" data-close="16,14">Konjevići - {BIZ['address']}</option></select></label>
    <label class="field" data-tyre-only><span>Dimenzija guma <small>(za zamenu)</small></span><input name="dimenzija" placeholder="205/55 R16"></label>
    <label class="field" data-tyre-only><span>Gume su <small>(za zamenu)</small></span><select name="gume"><option value="kod-mene">Kod mene</option><option value="hotel">U hotelu za gume</option><option value="kupujem">Kupujem nove kod vas</option></select></label>
    <label class="field"><span>Željeni datum *</span><input name="datum" type="date" required data-book-date></label>
@@ -75,7 +78,8 @@ def service_page():
    <a class="btn btn--go btn--block" href="#zakazivanje"><span>Zakažite termin</span>{icon('arrow')}</a>
    <a class="btn btn--line-light btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>Pozovite — opcija 3</span></a>
    <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja do servisa</span></a>
-   <p class="fine"><b>{BIZ['truck_name']}</b> ({BIZ['truck_note'].lower()}): {BIZ['address']}, radnim danima 08–16h, subotom 08–14h.</p>
+   <p class="fine">{BIZ['service_services']}</p>
+   <p class="fine"><b>Servis u Konjevićima</b>, {BIZ['address']}: vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge. Radnim danima 08–16h, subotom 08–14h.</p>
   </div>
  </aside>
 </div></section>'''
@@ -128,7 +132,7 @@ def brands_page():
         c = counts.get(b, 0)
         art = (f'<span class="brand__logo">{logo_pair(lg)}</span>' if lg else
                f'<span class="brand__word">{esc(b)}</span>')
-        meta = f'{n(c)} guma' if c else 'Na upit'
+        meta = 'Pogledaj gume' if c else 'Na upit'
         href = f'proizvodjac/{brand_slug(b)}/' if c else 'kontakt.html'
         L = b[0].upper()
         anchor = '' if L in letters else f' id="b-{L}"'
@@ -192,7 +196,7 @@ def about_page():
  <div class="about__offer">
   <div>{km(4, 'Ponuda')}<h2 class="d2">Ovlašćeni uvoznik Speedways i Tourador</h2><p>U ponudi su i Sava, Tigar, Michelin, Goodyear, Dunlop, Nokian i drugi proizvođači — za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.</p>
   <div class="about__links"><a class="btn btn--ink" href="{R}brendovi.html"><span>Brendovi</span>{icon('arrow')}</a><a class="btn btn--line" href="{BIZ['b2b']}" rel="noopener"><span>B2B portal za partnere</span>{icon('arrow-ne')}</a></div></div>
-  <ul class="about__nums">{''.join(f'<li data-reveal><b data-countup>{n(CAT_COUNT[c])}</b><span>{t}</span></li>' for c, t in (('putnicke', 'putničkih'), ('poluteretne', 'poluteretnih'), ('teretne', 'teretnih'), ('poljoprivredne', 'poljoprivrednih')))}</ul>
+  <ul class="about__nums">{''.join(f'<li data-reveal><b>{t}</b><span>{d}</span></li>' for _, t, d, _ in CATS[:4])}</ul>
  </div>
  <blockquote class="about__quote" data-reveal>Svim našim partnerima i budućim kupcima zahvaljujemo na podršci. Nastavićemo da radimo sa istim entuzijazmom i strašću — hvala što ste deo naše priče!</blockquote>
 </div></section>'''
@@ -228,9 +232,8 @@ def contact_page():
  {booking_form(2)}
  <div class="sec__head" id="kako-do-nas">{km(2, 'Lokacije')}<h2 class="d2">Kako do nas</h2></div>
  <div class="locs">
-  {loc('Čajka M — prodaja', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'])}
-  {loc('Guma Servis', BIZ['service_address'] + ',', BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['embed_service'])}
-  {loc(BIZ['truck_name'], BIZ['address'] + ',', BIZ['city'], BIZ['truck_hours'], BIZ['maps_hq'], BIZ['embed_hq'], f'<p class="fine">{BIZ["truck_note"]}. Telefon centrale, opcija 3.</p>')}
+  {loc(BIZ['hq_name'] + ' (' + BIZ['hq_area'] + ')', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'], '<p class="fine">' + BIZ['hq_services'] + '</p>')}
+  {loc('Guma Servis', BIZ['service_address'] + ',', BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['embed_service'], '<p class="fine">' + BIZ['service_services'] + '</p>')}
  </div>
 </div></section>'''
     return page('kontakt.html', 'Kontakt i kako do nas — Čajka M Čačak', body, active='kontakt')

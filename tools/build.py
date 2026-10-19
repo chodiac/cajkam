@@ -63,7 +63,7 @@ def llms():
     text = f'''# Čajka M
 
 > Uvoznik i prodavac pneumatika iz Čačka, Srbija, od 1992. Online prodaja guma za putnička, poluteretna, teretna,
-> industrijska i poljoprivredna vozila ({len(TIRES)} artikala), Guma Servis (montaža,
+> industrijska i poljoprivredna vozila, Guma Servis (montaža,
 > balansiranje, reglaža trapa) i hotel za gume. Ovlašćeni uvoznik brendova Speedways i Tourador. SRPS ISO 9001:2015 i 14001:2015.
 
 ## Prodavnica
@@ -73,8 +73,8 @@ def llms():
 {cats}
 
 ## Usluge
-- [Guma Servis]({seo.canonical("guma-servis/")}): {BIZ["service_address"]}, Čačak; radnim danima 08-18h, subotom 08-16h; cenovnik i zakazivanje
-- [{BIZ["truck_name"]}]({seo.canonical("kontakt/")}): servis za teretna vozila, {BIZ["address"]}, Čačak; radnim danima 08-16h, subotom 08-14h
+- [Guma Servis]({seo.canonical("guma-servis/")}): {BIZ["service_address"]}, Čačak - vulkanizerske usluge za putnička vozila i reglaža trapa; radnim danima 08-18h, subotom 08-16h; cenovnik i zakazivanje
+- [Servis u Konjevićima]({seo.canonical("kontakt/")}): {BIZ["address"]}, Čačak - vulkanizerske usluge za putnička i teretna vozila, mehaničarske usluge; radnim danima 08-16h, subotom 08-14h
 - [Hotel za gume]({seo.canonical("hotel-za-gume/")}): čuvanje guma, 600 RSD po komadu za jednu sezonu
 
 ## Kontakt

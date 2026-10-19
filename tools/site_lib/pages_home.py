@@ -58,7 +58,7 @@ def hero():
    </div>
    <div class="finder__foot">
     <p class="finder__pop"><span>Najtraženije:</span>{chips}</p>
-    <a class="finder__all" href="gume.html">Pogledaj sve gume ({n(len(TIRES))}) {icon('arrow')}</a>
+    <a class="finder__all" href="gume.html">Pogledaj sve gume {icon('arrow')}</a>
    </div>
   </form>
  </div>
@@ -76,7 +76,7 @@ def categories():
  <span class="catcard__veh">{vehicle(v)}</span>
  <span class="catcard__t">{t}</span>
  <span class="catcard__d">{d}</span>
- <span class="catcard__n"><b>{n(CAT_COUNT[c])}</b> guma u ponudi</span>
+ <span class="catcard__n">Pogledaj gume</span>
  <span class="catcard__go" aria-hidden="true">{icon('arrow')}</span>
 </a>''')
     return f'''
@@ -144,7 +144,7 @@ def offers():
  <div class="offers__head">
   <div>{km(3, 'Akcije')}<h2 id="sale-t" class="d2" data-split>Na popustu</h2></div>
   <p class="offers__big" data-max="{MAX_DISCOUNT}" aria-label="Sniženja do {MAX_DISCOUNT} procenata"><small>do</small><b>−<span data-countup>{MAX_DISCOUNT}</span></b><small>%</small></p>
-  <p class="offers__aside">{len(ON_SALE)} modela sa sniženom cenom. Cene su po komadu, sa PDV-om.<br><a class="more" href="akcije.html">Sve akcije {icon('arrow')}</a></p>
+  <p class="offers__aside">Modeli sa sniženom cenom. Cene su po komadu, sa PDV-om.<br><a class="more" href="akcije.html">Sve akcije {icon('arrow')}</a></p>
  </div>
  {rail(''.join(card(p) for p in sale), 'Gume na popustu')}
 </div></section>
@@ -190,7 +190,7 @@ def service():
   <div class="svc__copy">
    {km(6, 'Guma Servis', light=True)}
    <h2 id="svc-t" class="d2" data-split>Kupite gume. Mi ih montiramo.</h2>
-   <p class="svc__lede">Servis u Ulici {BIZ['service_address']} u Čačku: montaža, balansiranje, reglaža, vulkanizerske usluge i brzi servis.</p>
+   <p class="svc__lede">Dva servisa u Čačku: <b>Guma Servis</b>, {BIZ['service_address']} - vulkanizerske usluge za putnička vozila i reglaža trapa; i servis u <b>Konjevićima</b>, {BIZ['address']} - vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge.</p>
    <ul class="svc__list" data-svc-list>{items}</ul>
    <div class="svc__desc" id="svc-desc" aria-live="polite">{descs}</div>
    <div class="svc__cta">
@@ -286,9 +286,8 @@ def visit():
   <a class="visit__phone" href="tel:{BIZ['phone_href']}">{BIZ['phone']}</a>
   <p>Prodaja: <a href="tel:{BIZ['sales_href']}">{BIZ['sales']}</a> · <a href="mailto:prodaja@cajkam.rs">prodaja@cajkam.rs</a></p>
  </div>
- {loc('Čajka M — prodaja', BIZ['address'], BIZ['city'], BIZ['hours'], BIZ['maps_hq'], 'Prodaja guma.')}
- {loc('Guma Servis', BIZ['service_address'], BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], 'Montaža, balansiranje, reglaža i hotel za gume.')}
- {loc(BIZ['truck_name'], BIZ['address'], BIZ['city'], BIZ['truck_hours'], BIZ['maps_hq'], BIZ['truck_note'] + '. Telefon centrale, opcija 3.')}
+ {loc(BIZ['hq_name'], BIZ['address'] + ' (' + BIZ['hq_area'] + ')', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['hq_services'])}
+ {loc('Guma Servis', BIZ['service_address'], BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['service_services'])}
 </div></section>'''
 
 

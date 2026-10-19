@@ -375,7 +375,7 @@
 
 /* ------------------------------------------------------------------ visit */
 .visit { padding-block: clamp(64px, 8vw, 110px); }
-.visit__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.visit__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .visit__call { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px 40px; margin-bottom: 8px; }
 .visit__call .km, .visit__call .d2 { grid-column: 1; }
 .visit__call .visit__phone, .visit__call p:last-child { grid-column: 2; justify-self: end; }
@@ -417,8 +417,8 @@
 .ftr__list .i { width: 14px; height: 14px; display: inline; vertical-align: -2px; }
 .ftr__hours { display: grid; gap: 6px; font-size: 14px; }
 .ftr__hours li { display: flex; justify-content: space-between; max-width: 220px; }
-.ftr__sign { overflow: hidden; line-height: .78; }
-.ftr__sign p { font: 800 clamp(80px, 17.5vw, 290px)/.8 var(--fd); text-transform: uppercase; letter-spacing: -.02em; white-space: nowrap; color: var(--go); padding-left: var(--g); transform: translate(var(--bye, 0), 12%); }
+.ftr__sign { overflow: hidden; padding-bottom: .06em; }
+.ftr__sign p { font: 800 clamp(56px, 15.5vw, 270px)/1.05 var(--fd); text-transform: uppercase; letter-spacing: -.02em; white-space: nowrap; color: var(--go); padding-left: var(--g); transform: translateX(var(--bye, 0)); }
 .ftr__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 18px; font-size: 12px; color: var(--mute-l); border-top: 1px solid var(--line-l); }
 @media (max-width: 960px) { .ftr__grid { grid-template-columns: 1fr 1fr; } .ftr__news { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .ftr { margin: 0; border-radius: 0; } .ftr__grid { grid-template-columns: 1fr; gap: 28px; } .ftr__form { grid-template-columns: 1fr; } }

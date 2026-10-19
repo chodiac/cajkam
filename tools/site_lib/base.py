@@ -36,9 +36,12 @@ BIZ = {
     'service_address': 'Dr. Dragiše Mišovića 100', 'service_city': '32000 Čačak, Srbija',
     # kontakt says Sat 08-16h, kako-do-nas says Sat 09-16h: flagged in README, kontakt used.
     'service_hours': [('Radnim danima', '08–18h'), ('Subotom', '08–16h')],
-    # Truck service at the head office address (cajkam.rs/kontakt: "Servis za teretna vozila"), in Konjevići.
-    'truck_name': 'Servis u Konjevićima', 'truck_note': 'Servis za teretna vozila',
-    'truck_hours': [('Radnim danima', '08–16h'), ('Subotom', '08–14h')],
+    # Two service locations (client, 2026-10-20):
+    #  - head office in Konjevići: sales + tyre service for cars and trucks + mechanics
+    #  - Guma Servis: tyre service for cars + wheel alignment
+    'hq_name': 'Čajka M - prodaja i servis', 'hq_area': 'Konjevići',
+    'hq_services': 'Prodaja guma, vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge.',
+    'service_services': 'Vulkanizerske usluge za putnička vozila i reglaža trapa.',
     'b2b': 'https://b2b.cajkam.rs/login',
     'maps_hq': 'https://maps.google.com/maps/dir//%C4%8Cajka+M+D.O.O.+Bulevar+oslobodilaca+84+%C4%8Ca%C4%8Dak+320000/@43.8885993,20.383495,18z/data=!4m5!4m4!1m0!1m2!1m1!1s0x475772459823a2bb:0x2a1cf7abe2db7278',
     'maps_service': 'https://maps.google.com/maps/dir//Guma+servis+Dr.+Dragi%C5%A1e+Mi%C5%A1ovic%CC%81a+96+%C4%8Ca%C4%8Dak+32000/@43.8855441,20.355595,17z/data=!4m5!4m4!1m0!1m2!1m1!1s0x4757730d194668ad:0x4ca53a5e60b1878d',
@@ -100,13 +103,13 @@ SERVICES = [
      'Skidanje stare i postavljanje nove gume na felnu, pa balansiranje tegovima — da volan i vozilo ne podrhtavaju.',
      'Montažna mašina i balanser u radionici Guma Servisa', 'wrench'),
     ('reglaza', 'Reglaža trapa', '2.500 RSD',
-     'Podešavanje uglova točkova tako da budu normalni na podlogu i međusobno paralelni. Guma traje duže, vozilo drži pravac.',
+     'Podešavanje uglova točkova tako da budu normalni na podlogu i međusobno paralelni. Guma traje duže, vozilo drži pravac. U Guma Servisu, Dr. Dragiše Mišovića 100.',
      'Uređaj za kontrolu geometrije, vozilo na dizalici', 'align'),
     ('vulkanizer', 'Vulkanizerske usluge', 'od 300 RSD',
-     'Krpljenje tubeles guma čepom ili flekom, zamena ventila i prelepljivanje.',
+     'Krpljenje tubeles guma čepom ili flekom, zamena ventila i prelepljivanje. Za putnička vozila u oba servisa, za teretna u Konjevićima.',
      'Krpljenje gume flekom, detalj unutrašnjosti pneumatika', 'patch'),
     ('brzi', 'Brzi servis', 'rad mehaničara',
-     'Zamena ulja i filtera, filtera vazduha i polen filtera, disk kočnica i poliranje farova.',
+     'Mehaničarske usluge: zamena ulja i filtera, filtera vazduha i polen filtera, disk kočnica i poliranje farova. U servisu u Konjevićima, Bulevar oslobodilaca Čačka 84.',
      'Mehaničar menja filter ulja', 'oil'),
     ('perionica', 'Samouslužna perionica', 'u servisu',
      'Oprema za samouslužno pranje vozila nemačkog brenda Ehrle, na istoj adresi.',
@@ -343,11 +346,11 @@ def cat_img_url(c, full=True):
 def header(Rp, active):
     cats = ''.join(
         f'<a class="mega__cat" href="{Rp}gume.html?tip={c}" style="--i:{i}"><span class="mega__img"><img src="{cat_img_url(c, False)}" alt="" loading="lazy" decoding="async"></span>'
-        f'<span class="mega__txt">{vehicle(v)}<b>{t}</b><small>{d}</small><em>{n(CAT_COUNT[c])} guma</em></span></a>'
+        f'<span class="mega__txt">{vehicle(v)}<b>{t}</b><small>{d}</small></span></a>'
         for i, (c, t, d, v) in enumerate(CATS))
     seasons = ''.join(
         f'<a class="mega__season" data-s="{s}" href="{Rp}gume.html?sezona={s}">{icon({"letnja": "sun", "zimska": "snow", "sve": "drop"}[s])}{t}'
-        f'<small>{n(SEASON_COUNT[s])}</small></a>' for s, t in SEASONS)
+        f'</a>' for s, t in SEASONS)
     sizes = ''.join(f'<a class="size-chip" href="{Rp}gume.html?{size_query(s)}">{s}</a>' for s in POPULAR_SIZES[:6])
     nav = []
     for href, label, key in NAV:
@@ -391,7 +394,7 @@ def header(Rp, active):
   <div class="mega__side">
    <p class="label">Po sezoni</p><div class="mega__seasons">{seasons}</div>
    <p class="label">Najtraženije dimenzije</p><div class="mega__sizes">{sizes}</div>
-   <a class="btn btn--ink" href="{Rp}gume.html"><span>Sve gume · {n(len(TIRES))}</span>{icon('arrow')}</a>
+   <a class="btn btn--ink" href="{Rp}gume.html"><span>Sve gume</span>{icon('arrow')}</a>
   </div>
  </div></div>
 </header>
@@ -400,7 +403,7 @@ def header(Rp, active):
 
 def drawer(Rp):
     links = ''.join(f'<li style="--i:{i}"><a href="{Rp}{h}">{l}</a></li>' for i, (h, l, _) in enumerate(NAV))
-    cats = ''.join(f'<li><a href="{Rp}gume.html?tip={c}">{vehicle(v)}<span>{t}</span><small>{n(CAT_COUNT[c])}</small></a></li>'
+    cats = ''.join(f'<li><a href="{Rp}gume.html?tip={c}">{vehicle(v)}<span>{t}</span></a></li>'
                    for c, t, _, v in CATS)
     return f'''
 <div class="drawer" id="drawer" hidden data-drawer>
@@ -485,9 +488,9 @@ LOCAL_PAGES = {'', 'kontakt/', 'guma-servis/', 'hotel-za-gume/', 'o-nama/'}
 
 def descriptions():
     return {
-        'index.html': f'Online prodaja guma Čajka M iz Čačka: {n(len(TIRES))} guma za automobile, kombije, kamione i mašine. Guma Servis i hotel za gume u Čačku.',
-        'gume.html': f'Katalog guma Čajka M: {n(len(TIRES))} guma za automobile, kombije, kamione, viljuškare i traktore. Filtrirajte po dimenziji, sezoni, proizvođaču i ceni.',
-        'akcije.html': f'Gume na akciji u Čajka M: {len(ON_SALE)} modela sa sniženom cenom, do {MAX_DISCOUNT} % popusta. Cene po komadu sa PDV-om, dostava 1-3 radna dana.',
+        'index.html': f'Online prodaja guma Čajka M iz Čačka: gume za automobile, kombije, kamione, radne i poljoprivredne mašine. Dva servisa i hotel za gume u Čačku.',
+        'gume.html': f'Katalog guma Čajka M: gume za automobile, kombije, kamione, viljuškare i traktore. Filtrirajte po dimenziji, sezoni, proizvođaču i ceni.',
+        'akcije.html': f'Gume na akciji u Čajka M: modeli sa sniženom cenom, do {MAX_DISCOUNT} % popusta. Cene po komadu sa PDV-om, dostava 1-3 radna dana.',
         'servis.html': 'Guma Servis u Čačku, Dr. Dragiše Mišovića 100: montaža i balansiranje od 400 RSD, reglaža trapa, vulkanizerske usluge i brzi servis. Zakažite termin.',
         'hotel-za-gume.html': 'Hotel za gume u Čačku: čuvanje guma svih vrsta i veličina, 600 RSD po komadu za jednu sezonu, uz montažu i balansiranje u Guma Servisu.',
         'brendovi.html': 'Brendovi guma u ponudi Čajka M: Continental, Goodyear, Michelin, Sava, Tigar i drugi. Ovlašćeni uvoznik brendova Speedways i Tourador.',

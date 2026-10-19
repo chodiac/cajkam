@@ -254,9 +254,9 @@ function initSearch() {
     let html = '';
     if (sizes.length) html += '<p class="suggest__h">Dimenzije</p>' + sizes.map(([k, n]) => {
       const [w, h, d] = k.split(/[/ R]+/);
-      return `<a role="option" href="${url(`gume.html?sirina=${w}&visina=${h}&precnik=${d}`)}"><span class="sz">${k}</span><small>${num(n)} ${gume(n)}</small></a>`;
+      return `<a role="option" href="${url(`gume.html?sirina=${w}&visina=${h}&precnik=${d}`)}"><span class="sz">${k}</span></a>`;
     }).join('');
-    if (br.length) html += '<p class="suggest__h">Proizvođači</p>' + br.map(([b, n]) => `<a role="option" href="${url(`gume.html?brend=${encodeURIComponent(b)}`)}"><b>${esc(b)}</b><small>${num(n)} ${gume(n)}</small></a>`).join('');
+    if (br.length) html += '<p class="suggest__h">Proizvođači</p>' + br.map(([b, n]) => `<a role="option" href="${url(`gume.html?brend=${encodeURIComponent(b)}`)}"><b>${esc(b)}</b></a>`).join('');
     html += `<p class="suggest__h">Pretraga</p><a role="option" href="${url(`gume.html?q=${encodeURIComponent(input.value.trim())}`)}">Sve gume za „${esc(input.value.trim())}”<small>${icon('arrow')}</small></a>`;
     box.innerHTML = html; box.hidden = false; sel = -1; input.setAttribute('aria-expanded', 'true');
   });
@@ -334,7 +334,7 @@ function initActions() {
 // opening times - weekdays 08–18h, Saturday 08–16h, closed on Sunday.
 function initBooking() {
   $$('[data-booking]').forEach((f) => {
-    const date = $('[data-book-date]', f), time = $('[data-book-time]', f);
+    const date = $('[data-book-date]', f), time = $('[data-book-time]', f), place = $('[data-book-place]', f);
     const pad = (n) => String(n).padStart(2, '0');
     const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     const today = new Date();
@@ -344,7 +344,9 @@ function initBooking() {
       const d = date.value ? new Date(`${date.value}T12:00`) : null;
       const sunday = d && d.getDay() === 0;
       date.setCustomValidity(sunday ? 'Nedeljom ne radimo - izaberite drugi dan.' : '');
-      const last = d && d.getDay() === 6 ? 15 : 17; // last start an hour before closing
+      // closing hours come from the chosen service (data-close="weekday,saturday"); last start an hour earlier
+      const [wk, sat] = (place?.selectedOptions[0]?.dataset.close || '18,16').split(',').map(Number);
+      const last = (d && d.getDay() === 6 ? sat : wk) - 1;
       const was = time.value;
       time.innerHTML = '<option value="">Izaberite vreme</option>' + Array.from({ length: last - 8 + 1 }, (_, i) => `${pad(8 + i)}:00`)
         .map((t) => `<option${t === was ? ' selected' : ''}>${t}</option>`).join('');
@@ -354,11 +356,18 @@ function initBooking() {
       const tyres = f.usluga.value === 'zamena';
       // the tyre fields stay in place (no layout jump) and are simply switched off for alignment
       $$('[data-tyre-only]', f).forEach((l) => { l.classList.toggle('is-off', !tyres); $$('input, select', l).forEach((i) => { i.disabled = !tyres; }); });
+      // wheel alignment is done only at Guma Servis; a tyre change at either service
+      if (place) {
+        const k = place.querySelector('option[value="konjevici"]');
+        if (k) k.disabled = !tyres;
+        if (!tyres) place.value = 'guma-servis';
+        slots();
+      }
     }
     const want = new URLSearchParams(location.search).get('usluga');
     if (want === 'zamena' || want === 'reglaza') f.usluga.value = want;
     date.addEventListener('change', slots);
-    f.addEventListener('change', (e) => { if (e.target.name === 'usluga') service(); });
+    f.addEventListener('change', (e) => { if (e.target.name === 'usluga') service(); if (e.target === place) slots(); });
     slots(); service();
   });
 }

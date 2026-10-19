@@ -150,7 +150,8 @@ def org_graph(biz):
 def local_graph(biz):
     """The two locations: the shop (tyre sales) and Guma Servis (fitting, alignment)."""
     shop = {
-        '@type': 'TireShop', '@id': CANONICAL_BASE + '#prodaja', 'name': 'Čajka M - prodaja guma',
+        '@type': ['TireShop', 'AutoRepair'], '@id': CANONICAL_BASE + '#prodaja', 'name': biz['hq_name'],
+        'description': biz['hq_services'],
         'parentOrganization': {'@id': CANONICAL_BASE + '#org'}, 'url': CANONICAL_BASE,
         'image': public('assets/img/og-cajkam.jpg'), 'telephone': biz['phone'], 'email': 'prodaja@cajkam.rs',
         'address': _address(biz['address'], biz['city']),
@@ -159,21 +160,14 @@ def local_graph(biz):
     }
     service = {
         '@type': 'AutoRepair', '@id': CANONICAL_BASE + '#guma-servis', 'name': 'Guma Servis - Čajka M',
+        'description': biz['service_services'],
         'parentOrganization': {'@id': CANONICAL_BASE + '#org'}, 'url': canonical('guma-servis/'),
         'image': public('assets/img/og-cajkam.jpg'), 'telephone': biz['phone'],
         'address': _address(biz['service_address'], biz['service_city']),
         'geo': {'@type': 'GeoCoordinates', 'latitude': SERVICE_GEO[0], 'longitude': SERVICE_GEO[1]},
         'openingHoursSpecification': _hours(biz['service_hours']), 'priceRange': 'RSD', 'hasMap': biz['maps_service'],
     }
-    trucks = {
-        '@type': 'AutoRepair', '@id': CANONICAL_BASE + '#servis-konjevici', 'name': 'Čajka M - ' + biz['truck_name'],
-        'description': biz['truck_note'], 'parentOrganization': {'@id': CANONICAL_BASE + '#org'}, 'url': canonical('kontakt/'),
-        'image': public('assets/img/og-cajkam.jpg'), 'telephone': biz['phone'],
-        'address': _address(biz['address'], biz['city']),
-        'geo': {'@type': 'GeoCoordinates', 'latitude': HQ_GEO[0], 'longitude': HQ_GEO[1]},
-        'openingHoursSpecification': _hours(biz['truck_hours']), 'priceRange': 'RSD', 'hasMap': biz['maps_hq'],
-    }
-    return [shop, service, trucks]
+    return [shop, service]
 
 
 def breadcrumb_graph(doc, page_url):

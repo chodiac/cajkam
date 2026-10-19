@@ -268,7 +268,7 @@ def listing(base, name, h1, lede, items, filter_q, label, trail_title=None):
  <div class="phead__road" aria-hidden="true"></div>
 </div></section>
 <section class="sec sec--tight listing"><div class="wrap">
- <div class="toolbar"><p class="toolbar__count"><b>{n(len(items))}</b> guma{f' · strana {k} od {pages}' if pages > 1 else ''}</p>
+ <div class="toolbar"><p class="toolbar__count">{f'Strana {k} od {pages}' if pages > 1 else ''}</p>
   <a class="btn btn--ink btn--sm" href="{R}gume.html?{filter_q}">{icon('filter')}<span>Filtriraj po dimenziji i sezoni</span></a></div>
  <div class="grid grid--4 listing__grid">{''.join(card(p) for p in chunk)}</div>
  {pager(base, k, pages)}
@@ -276,7 +276,7 @@ def listing(base, name, h1, lede, items, filter_q, label, trail_title=None):
         urls = [seo.canonical(f'kupi-gume/{p["s"]}/') for p in chunk]
         ld = [{'@type': 'ItemList', 'name': h1, 'numberOfItems': len(chunk),
                'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'url': u} for i, u in enumerate(urls)]}]
-        desc = f'{h1}: {n(len(items))} guma u ponudi. {re.sub("<[^>]+>", "", lede)}'[:158]
+        desc = f'{h1} u ponudi Čajka M. {re.sub("<[^>]+>", "", lede)}'[:158]
         page(path, title, body, active='gume', desc=desc, ld=ld, cls='is-shop')
     return pages
 

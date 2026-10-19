@@ -84,7 +84,7 @@ function options(key, entries, labels = {}, dots = false) {
   return entries.map(([v, n]) => {
     const on = state[key].includes(v);
     return `<label class="fopt${n || on ? '' : ' is-zero'}"><input type="checkbox" data-k="${key}" value="${esc(v)}"${on ? ' checked' : ''}>
-      ${dots ? `<i data-s="${esc(v)}"></i>` : ''}<span>${esc(labels[v] || v)}</span><small>${num(n)}</small></label>`;
+      ${dots ? `<i data-s="${esc(v)}"></i>` : ''}<span>${esc(labels[v] || v)}</span></label>`;
   }).join('');
 }
 let brandQuery = '';
@@ -103,12 +103,11 @@ function renderFacets() {
   const base = filter(state, ['cmin', 'cmax']).filter((p) => !p.np);
   const lo = base.length ? Math.floor(Math.min(...base.map((p) => p.p))) : 0;
   const hi = base.length ? Math.ceil(Math.max(...base.map((p) => p.p))) : 0;
-  const akN = filter(state, ['akcija']).filter(onSale).length;
 
   const openState = Object.fromEntries($$('.fgroup', facetsBox).map((g) => [g.dataset.group, g.open]));
   facetsBox.innerHTML = [
     group('dost', 'Dostupnost', `<label class="switch"><span>Samo na stanju</span><input type="checkbox" data-k="stanje"${state.stanje ? ' checked' : ''}></label>
-      ${preset.has('akcija') ? '' : `<label class="switch"><span>Samo na akciji <small class="fine">(${num(akN)})</small></span><input type="checkbox" data-k="akcija"${state.akcija ? ' checked' : ''}></label>`}`),
+      ${preset.has('akcija') ? '' : `<label class="switch"><span>Samo na akciji</span><input type="checkbox" data-k="akcija"${state.akcija ? ' checked' : ''}></label>`}`),
     group('tip', 'Tip gume', options('tip', tipE, CATS)),
     group('brend', 'Proizvođač', `<input class="fgroup__search" type="search" placeholder="Pronađi proizvođača" aria-label="Pronađi proizvođača" data-brand-q value="${esc(brandQuery)}">
       ${options('brend', brShown)}${!brandQuery && brE.length > 8 ? `<button type="button" class="fgroup__more" data-brand-all>${brandAll ? 'Prikaži manje' : `Prikaži sve (${brE.length})`}</button>` : ''}`),
@@ -131,8 +130,8 @@ function renderSizebar() {
   fill(sizeSel.precnik, filter(state, ['precnik']), 'd', state.precnik);
   const zc = count(filter(state, ['sezona']), (p) => p.z);
   const all = [...zc.values()].reduce((a, b) => a + b, 0);
-  seasonBar.innerHTML = `<button type="button" data-season="" aria-pressed="${!state.sezona.length}">Sve <small>${num(all)}</small></button>` +
-    ['letnja', 'zimska', 'sve'].map((z) => `<button type="button" data-season="${z}" aria-pressed="${state.sezona.includes(z)}"><i data-s="${z}"></i>${SEASONS_PL[z]} <small>${num(zc.get(z) || 0)}</small></button>`).join('');
+  seasonBar.innerHTML = `<button type="button" data-season="" aria-pressed="${!state.sezona.length}">Sve</button>` +
+    ['letnja', 'zimska', 'sve'].map((z) => `<button type="button" data-season="${z}" aria-pressed="${state.sezona.includes(z)}"><i data-s="${z}"></i>${SEASONS_PL[z]}</button>`).join('');
   seasonBar.hidden = !all;
 }
 
@@ -160,15 +159,15 @@ let results = [];
 function renderResults(reset = true) {
   if (reset) shown = PAGE;
   results = filter(state).sort(SORTS[state.sort] || SORTS.rec);
-  countEl.innerHTML = `<b>${num(results.length)}</b> ${gume(results.length)}`;
-  $('[data-filters-apply]', root).textContent = results.length ? `Prikaži ${num(results.length)} ${gume(results.length, true)}` : 'Nema rezultata';
+  countEl.innerHTML = results.length ? '<b>Rezultati</b>' : '<b>Nema rezultata</b>';
+  $('[data-filters-apply]', root).textContent = results.length ? 'Prikaži rezultate' : 'Nema rezultata';
   grid.classList.toggle('is-list', state.prikaz === 'list');
   $$('[data-view]', root).forEach((b) => b.setAttribute('aria-pressed', b.dataset.view === (state.prikaz || 'grid')));
   if (!results.length) { grid.innerHTML = emptyState(); moreBtn.hidden = true; shownEl.textContent = ''; return; }
   grid.innerHTML = results.slice(0, shown).map(cardHTML).join('');
   moreBtn.hidden = shown >= results.length;
-  moreBtn.textContent = `Prikaži još ${num(Math.min(PAGE, results.length - shown))}`;
-  shownEl.textContent = `Prikazano ${num(Math.min(shown, results.length))} od ${num(results.length)}`;
+  moreBtn.textContent = 'Prikaži još';
+  shownEl.textContent = '';
   grid.setAttribute('aria-busy', 'false');
 }
 function emptyState() {
@@ -181,7 +180,7 @@ function emptyState() {
   const size = [state.sirina, state.visina && `/${state.visina}`, state.precnik && ` R${state.precnik}`].filter(Boolean).join('');
   return `<div class="empty">${size ? `<p class="sz">${esc(size)}</p>` : ''}<h2 class="d3">Nema guma za ove filtere</h2>
    <p>Pokušajte bez jednog od filtera ili nas pozovite - ako gume nema u online ponudi, proverićemo kod dobavljača.</p>
-   <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${ways.map(([k, v, l, n]) => `<button class="btn btn--line btn--sm" data-rm-k="${k}" data-rm-v="${esc(v)}">Bez „${esc(l)}” · ${num(n)}</button>`).join('')}
+   <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${ways.map(([k, v, l, n]) => `<button class="btn btn--line btn--sm" data-rm-k="${k}" data-rm-v="${esc(v)}">Bez „${esc(l)}”</button>`).join('')}
    <a class="btn btn--go btn--sm" href="tel:+381325461011">${icon('phone')}+381 32 5461 011</a></div></div>`;
 }
 
@@ -259,8 +258,8 @@ function bind() {
     shown += PAGE;
     grid.insertAdjacentHTML('beforeend', results.slice(from, shown).map((p, i) => cardHTML(p, i)).join(''));
     moreBtn.hidden = shown >= results.length;
-    moreBtn.textContent = `Prikaži još ${num(Math.min(PAGE, results.length - shown))}`;
-    shownEl.textContent = `Prikazano ${num(Math.min(shown, results.length))} od ${num(results.length)}`;
+    moreBtn.textContent = 'Prikaži još';
+    shownEl.textContent = '';
     grid.children[from]?.querySelector('a:not([tabindex])')?.focus({ preventScroll: true });
   });
 

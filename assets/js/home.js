@@ -37,7 +37,7 @@ const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
     if (sel.d.value) list = list.filter((r) => r[4] === sel.d.value);
     const n = list.reduce((a, r) => a + r[5], 0);
     const any = sel.w.value || season() || tip.value !== 'putnicke';
-    label.textContent = !any ? 'Pronađi gume' : n ? `Prikaži ${num(n)} ${gume(n, true)}` : 'Nema - prikaži slične';
+    label.textContent = !any || n ? 'Pronađi gume' : 'Nema - prikaži slične';
   }
   form.addEventListener('change', (e) => {
     if (e.target === tip || e.target.name === 'sezona') update();
