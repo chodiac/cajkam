@@ -2,7 +2,7 @@
 import re
 
 from .base import (logo_src, logo_pair, CATS, R, BIZ, BRANDS, POSTS, PAGES, POLICY, SERVICES, SERVICE_PRICES, UPLOADS, CAT_COUNT,
-                   esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, post_card, relink, date_sr, todo)
+                   esc, fmt, n, icon, km, page, page_head, crumbs, media_slot, photo, SERVICE_PHOTO, post_card, relink, date_sr, todo)
 from .pages_home import hotel_stack
 from .pages_catalog import brand_slug
 from . import seo
@@ -56,7 +56,7 @@ def service_page():
 {''.join(f'<tr><td>{a}</td><td>{fmt(b) if not isinstance(b, str) else b}</td></tr>' for a, b in rows)}
 </tbody></table></section>''' for g, rows in SERVICE_PRICES)
     items = ''.join(f'''<article class="svcrow" data-reveal>
- <div class="svcrow__media">{media_slot(ph, "4/3", "slot--dark", ico)}</div>
+ <div class="svcrow__media">{photo(SERVICE_PHOTO[k], t, "4/3", sizes="(max-width: 700px) 100vw, 380px", pos="50% 55%") or media_slot(ph, "4/3", "slot--dark", ico)}</div>
  <div class="svcrow__copy"><p class="svcrow__no">0{i + 1}</p><h2 class="d3">{t}</h2><p>{d}</p><p class="svcrow__price">{pr}</p></div>
 </article>''' for i, (k, t, pr, d, ph, ico) in enumerate(SERVICES))
     hours = ''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['service_hours'])
@@ -71,16 +71,25 @@ def service_page():
   <p class="fine">Cene su u dinarima, prema cenovniku objavljenom na cajkam.rs.</p>
  </div>
  <aside class="svcpage__side">
-  <div class="box box--ink sticky">
+  <div class="box box--ink">
+   {photo('guma-servis-fasada', 'Guma Servis, Dr. Dragiše Mišovića 100', '16/10', 'photo--box', '320px', reveal=False)}
    <p class="label label--light">Guma Servis</p>
    <p class="big">{BIZ['service_address']}<br>{BIZ['service_city']}</p>
-   <ul class="hours hours--light">{hours}</ul>
-   <a class="btn btn--go btn--block" href="#zakazivanje"><span>Zakažite termin</span>{icon('arrow')}</a>
-   <a class="btn btn--line-light btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>Pozovite — opcija 3</span></a>
-   <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja do servisa</span></a>
    <p class="fine">{BIZ['service_services']}</p>
-   <p class="fine"><b>Servis u Konjevićima</b>, {BIZ['address']}: vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge. Radnim danima 08–16h, subotom 08–14h.</p>
+   <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['service_hours'])}</ul>
+   <a class="btn btn--go btn--block" href="?servis=guma-servis#zakazivanje" data-book-at="guma-servis"><span>Zakažite termin</span>{icon('arrow')}</a>
+   <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja</span></a>
   </div>
+  <div class="box box--ink">
+   {photo('konjevici-zgrada', 'Čajka M, Bulevar oslobodilaca Čačka 84, Konjevići', '16/10', 'photo--box', '320px', reveal=False)}
+   <p class="label label--light">Servis u Konjevićima</p>
+   <p class="big">{BIZ['address']}<br>{BIZ['city']}</p>
+   <p class="fine">Vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge.</p>
+   <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['hours'])}</ul>
+   <a class="btn btn--go btn--block" href="?servis=konjevici#zakazivanje" data-book-at="konjevici"><span>Zakažite termin</span>{icon('arrow')}</a>
+   <a class="btn btn--line-light btn--block" href="{BIZ['maps_hq']}" rel="noopener">{icon('pin')}<span>Putanja</span></a>
+  </div>
+  <a class="btn btn--line btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>{BIZ['phone']} · opcija 3</span></a>
  </aside>
 </div></section>'''
     return page('servis.html', 'Guma Servis — vulkanizerske usluge i reglaža trapa u Čačku | Čajka M', body, active='servis')
@@ -192,7 +201,7 @@ def about_page():
   <section data-reveal>{km(2, 'Principi')}<h2 class="d3">Osnovni principi poslovanja</h2><ul class="ticks"><li>Uvažavanje i stalno prilagođavanje zahtevima tržišta i kupaca</li><li>Visok kvalitet proizvoda i usluga u svim segmentima</li><li>Partnerski odnosi sa svim učesnicima u razmeni i sa finalnim potrošačima</li></ul></section>
   <section data-reveal>{km(3, 'Sertifikati')}<h2 class="d3">Kvalitet i životna sredina</h2><p>Čajka M je nosilac sertifikata <b>SRPS ISO 9001:2015</b> i <b>SRPS ISO 14001:2015</b>, koji potvrđuju posvećenost kvalitetu i zaštiti životne sredine.</p></section>
  </div>
- {media_slot('Magacin i tim Čajka M, Bulevar oslobodilaca Čačka 84', '21/9', 'slot--wide', 'hotel')}
+ {photo('konjevici-zgrada', 'Čajka M, Bulevar oslobodilaca Čačka 84, Konjevići', '21/9', 'photo--wide', '(max-width: 1200px) 100vw, 1200px', '50% 60%')}
  <div class="about__offer">
   <div>{km(4, 'Ponuda')}<h2 class="d2">Ovlašćeni uvoznik Speedways i Tourador</h2><p>U ponudi su i Sava, Tigar, Michelin, Goodyear, Dunlop, Nokian i drugi proizvođači — za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.</p>
   <div class="about__links"><a class="btn btn--ink" href="{R}brendovi.html"><span>Brendovi</span>{icon('arrow')}</a><a class="btn btn--line" href="{BIZ['b2b']}" rel="noopener"><span>B2B portal za partnere</span>{icon('arrow-ne')}</a></div></div>
@@ -206,8 +215,9 @@ def about_page():
 def contact_page():
     emails = ''.join(f'<li><a href="mailto:{e}">{e}</a><small>{l}</small></li>' for e, l in BIZ['emails'])
 
-    def loc(t, a, c, hrs, maps, emb, note=''):
+    def loc(t, a, c, hrs, maps, emb, note='', img=''):
         return f'''<article class="loc" data-reveal>
+ {photo(img, t, '16/9', 'photo--flat', '(max-width: 700px) 100vw, 50vw', reveal=False)}
  <div class="loc__map"><iframe src="{emb}" title="Mapa: {t}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
  <div class="loc__body"><h3 class="d3">{t}</h3><p>{a}<br>{c}</p>
  <ul class="hours">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in hrs)}</ul>{note}
@@ -232,8 +242,8 @@ def contact_page():
  {booking_form(2)}
  <div class="sec__head" id="kako-do-nas">{km(2, 'Lokacije')}<h2 class="d2">Kako do nas</h2></div>
  <div class="locs">
-  {loc(BIZ['hq_name'] + ' (' + BIZ['hq_area'] + ')', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'], '<p class="fine">' + BIZ['hq_services'] + '</p>')}
-  {loc('Guma Servis', BIZ['service_address'] + ',', BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['embed_service'], '<p class="fine">' + BIZ['service_services'] + '</p>')}
+  {loc(BIZ['hq_name'] + ' (' + BIZ['hq_area'] + ')', BIZ['address'] + ',', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['embed_hq'], '<p class="fine">' + BIZ['hq_services'] + '</p>', 'konjevici-zgrada')}
+  {loc('Guma Servis', BIZ['service_address'] + ',', BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['embed_service'], '<p class="fine">' + BIZ['service_services'] + '</p>', 'guma-servis-fasada')}
  </div>
 </div></section>'''
     return page('kontakt.html', 'Kontakt i kako do nas — Čajka M Čačak', body, active='kontakt')

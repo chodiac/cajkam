@@ -1,7 +1,7 @@
 """Homepage."""
 from .base import (ROOT, R, BIZ, CATS, SEASONS, RECOMMENDED, SERVICES, TIRES, IN_STOCK, ON_SALE, CAT_COUNT, CAT_STOCK,
                    SEASON_STOCK, BY_SLUG, MAX_DISCOUNT, POPULAR_SIZES, BRANDS, BRAND_COUNT, POSTS, UPLOADS,
-                   esc, fmt, n, numkey, icon, vehicle, km, card, rail, media_slot, post_card, explainer, page,
+                   esc, fmt, n, numkey, icon, vehicle, km, card, rail, media_slot, photo, SERVICE_PHOTO, post_card, explainer, page,
                    size_query, cat_image, img_url, todo, logo_src, logo_pair)
 
 
@@ -182,8 +182,9 @@ def service():
     # longest one and switching services never changes the section's height.
     descs = ''.join(f'<p data-svc-desc="{k}"{" class=is-on" if i == 0 else ""}>{d}</p>'
                     for i, (k, _, _, d, _, _) in enumerate(SERVICES))
-    media = ''.join(f'<div class="svc__media" data-svc-media="{k}"{"" if i == 0 else " hidden"}>{media_slot(ph, "4/5", "slot--dark", ico)}</div>'
-                    for i, (k, _, _, _, ph, ico) in enumerate(SERVICES))
+    media = ''.join(f'<div class="svc__media" data-svc-media="{k}"{"" if i == 0 else " hidden"}>'
+                    f'{photo(SERVICE_PHOTO[k], t, "4/5", sizes="(max-width: 900px) 100vw, 40vw", reveal=False) or media_slot(ph, "4/5", "slot--dark", ico)}</div>'
+                    for i, (k, t, _, _, ph, ico) in enumerate(SERVICES))
     return f'''
 <section class="svc" aria-labelledby="svc-t"><div class="svc__panel">
  <div class="wrap svc__grid">
@@ -273,7 +274,8 @@ def guides():
 
 
 def visit():
-    loc = lambda t, a, c, hrs, maps, note: f'''<article class="visit__loc" data-reveal>
+    loc = lambda t, a, c, hrs, maps, note, img: f'''<article class="visit__loc" data-reveal>
+ {photo(img, t, "16/9", sizes="(max-width: 600px) 100vw, 45vw", reveal=False)}
  <h3>{t}</h3><p>{a}<br>{c}</p>
  <ul class="hours">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in hrs)}</ul>
  <p class="fine">{note}</p>
@@ -286,8 +288,8 @@ def visit():
   <a class="visit__phone" href="tel:{BIZ['phone_href']}">{BIZ['phone']}</a>
   <p>Prodaja: <a href="tel:{BIZ['sales_href']}">{BIZ['sales']}</a> · <a href="mailto:prodaja@cajkam.rs">prodaja@cajkam.rs</a></p>
  </div>
- {loc(BIZ['hq_name'], BIZ['address'] + ' (' + BIZ['hq_area'] + ')', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['hq_services'])}
- {loc('Guma Servis', BIZ['service_address'], BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['service_services'])}
+ {loc(BIZ['hq_name'], BIZ['address'] + ' (' + BIZ['hq_area'] + ')', BIZ['city'], BIZ['hours'], BIZ['maps_hq'], BIZ['hq_services'], 'konjevici-zgrada')}
+ {loc('Guma Servis', BIZ['service_address'], BIZ['service_city'], BIZ['service_hours'], BIZ['maps_service'], BIZ['service_services'], 'guma-servis-fasada')}
 </div></section>'''
 
 

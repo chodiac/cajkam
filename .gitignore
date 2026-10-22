@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+
+# camera originals (80 MB); tools/photos.py writes the web versions to assets/img/foto/
+assets/img/slike/

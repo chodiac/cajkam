@@ -108,7 +108,7 @@ SERVICES = [
     ('vulkanizer', 'Vulkanizerske usluge', 'od 300 RSD',
      'Krpljenje tubeles guma čepom ili flekom, zamena ventila i prelepljivanje. Za putnička vozila u oba servisa, za teretna u Konjevićima.',
      'Krpljenje gume flekom, detalj unutrašnjosti pneumatika', 'patch'),
-    ('brzi', 'Brzi servis', 'rad mehaničara',
+    ('brzi', 'Mehaničarske usluge', 'rad mehaničara',
      'Mehaničarske usluge: zamena ulja i filtera, filtera vazduha i polen filtera, disk kočnica i poliranje farova. U servisu u Konjevićima, Bulevar oslobodilaca Čačka 84.',
      'Mehaničar menja filter ulja', 'oil'),
     ('perionica', 'Samouslužna perionica', 'u servisu',
@@ -606,6 +606,23 @@ def page_head(title, lede='', label='', trail=(), extra='', no=1, dark=False):
 def todo(text):
     """Visible marker for content the client still has to supply."""
     return f'<span class="todo" title="Sadržaj za dopunu">{icon("info")}{text}</span>'
+
+
+# Client photos (tools/photos.py writes assets/img/foto/<slug>-640.jpg and -1280.jpg).
+SERVICE_PHOTO = {'montaza': 'montaza-guma', 'reglaza': 'reglaza', 'vulkanizer': 'montazerka',
+                 'brzi': 'mehanicari', 'perionica': 'perionica'}
+
+
+def photo(slug, alt, ratio='4/3', cls='', sizes='(max-width: 900px) 100vw, 45vw', pos='50% 50%', reveal=True):
+    """Responsive client photo; falls back to nothing if the file was not generated."""
+    if not (ROOT / 'assets' / 'img' / 'foto' / f'{slug}-640.jpg').exists():
+        return ''
+    big = f'{R}assets/img/foto/{slug}-1280.jpg'
+    has_big = (ROOT / 'assets' / 'img' / 'foto' / f'{slug}-1280.jpg').exists()
+    srcset = f'{R}assets/img/foto/{slug}-640.jpg 640w' + (f', {big} 1280w' if has_big else '')
+    return (f'<figure class="photo {cls}" style="aspect-ratio:{ratio}"{' data-reveal="wipe"' if reveal else ''}>'
+            f'<img src="{big if has_big else R + f"assets/img/foto/{slug}-640.jpg"}" srcset="{srcset}" sizes="{sizes}" alt="{esc(alt)}" '
+            f'loading="lazy" decoding="async" style="object-position:{pos}"></figure>')
 
 
 def media_slot(label, ratio='4/3', cls='', ico='wrench'):

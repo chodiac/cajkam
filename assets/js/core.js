@@ -369,6 +369,20 @@ function initBooking() {
     date.addEventListener('change', slots);
     f.addEventListener('change', (e) => { if (e.target.name === 'usluga') service(); if (e.target === place) slots(); });
     slots(); service();
+    // "Zakažite termin" next to a location (?servis=… or a click on data-book-at) preselects it.
+    // Konjevići has no wheel alignment, so it also switches the service to a tyre change.
+    const preset = (where) => {
+      if (!place || !where) return;
+      if (where === 'konjevici') { f.usluga.value = 'zamena'; service(); }
+      place.value = where; slots();
+    };
+    preset(new URLSearchParams(location.search).get('servis'));
+    $$('[data-book-at]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      preset(a.dataset.bookAt);
+      $('#zakazivanje')?.scrollIntoView({ behavior: CALM ? 'auto' : 'smooth' });
+      history.replaceState(null, '', `?servis=${a.dataset.bookAt}#zakazivanje`);
+    }));
   });
 }
 
