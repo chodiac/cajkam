@@ -6,7 +6,7 @@
 
 ## Prodavnica
 - [Sve gume](https://cajkam.rs/kupi-gume/): katalog sa filterima po dimenziji, sezoni, proizvođaču i ceni
-- [Akcije](https://cajkam.rs/akcije/): gume na popustu
+- [Akcije](https://cajkam.rs/akcije/): aktuelne akcije (trenutno nema guma na akciji)
 - [Brendovi](https://cajkam.rs/brendovi/)
 - [Putničke gume](https://cajkam.rs/kategorija-proizvoda/putnicke/): Automobili, SUV i 4x4 vozila
 - [Poluteretne gume](https://cajkam.rs/kategorija-proizvoda/poluteretne/): Kombi i laka dostavna vozila

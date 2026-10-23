@@ -468,3 +468,6 @@
 .visit__loc .photo { border-radius: 12px; margin-bottom: 4px; }
 .loc { grid-template-rows: auto 240px auto; }
 .svcpage__side { display: grid; gap: 14px; align-content: start; }
+
+.empty--promo { padding-block: clamp(48px, 7vw, 90px); }
+.empty__cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }

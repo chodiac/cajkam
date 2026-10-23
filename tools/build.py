@@ -68,7 +68,7 @@ def llms():
 
 ## Prodavnica
 - [Sve gume]({seo.canonical("kupi-gume/")}): katalog sa filterima po dimenziji, sezoni, proizvođaču i ceni
-- [Akcije]({seo.canonical("akcije/")}): gume na popustu
+- [Akcije]({seo.canonical("akcije/")}): aktuelne akcije (trenutno nema guma na akciji)
 - [Brendovi]({seo.canonical("brendovi/")})
 {cats}
 

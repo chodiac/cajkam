@@ -28,7 +28,7 @@ def hero():
  <div class="wrap hero__top">
   {km(0, 'Čajka M · Čačak, od 1992.', light=True)}
   <h1 id="hero-t" class="hero__t"><span class="ln"><span>Drži</span></span> <span class="ln"><span>put.</span></span></h1>
-  <p class="hero__lede">Gume za automobile, kombije, kamione i radne mašine - izaberite dimenziju i pogledajte šta imamo u ponudi.</p>
+  <p class="hero__lede">Putničke, poluteretne, teretne, industrijske i poljoprivredne gume.</p>
  </div>
  <div class="hero__cond" aria-hidden="true">
   <span class="hero__cond-i" data-cond-icon>{icon('sun')}</span><span data-cond-label>Suv asfalt</span>
@@ -137,18 +137,8 @@ def tread_section():
 
 
 def offers():
-    sale = sorted(ON_SALE, key=lambda p: (-p['st'], -(1 - p['p'] / p['r'])))[:12]
     rec = [BY_SLUG[s] for s in RECOMMENDED if s in BY_SLUG]
     return f'''
-<section class="sec offers" aria-labelledby="sale-t"><div class="wrap">
- <div class="offers__head">
-  <div>{km(3, 'Akcije')}<h2 id="sale-t" class="d2" data-split>Na popustu</h2></div>
-  <p class="offers__big" data-max="{MAX_DISCOUNT}" aria-label="Sniženja do {MAX_DISCOUNT} procenata"><small>do</small><b>−<span data-countup>{MAX_DISCOUNT}</span></b><small>%</small></p>
-  <p class="offers__aside">Modeli sa sniženom cenom. Cene su po komadu, sa PDV-om.<br><a class="more" href="akcije.html">Sve akcije {icon('arrow')}</a></p>
- </div>
- {rail(''.join(card(p) for p in sale), 'Gume na popustu')}
-</div></section>
-
 <section class="sec sec--paper" aria-labelledby="rec-t"><div class="wrap">
  <div class="sec__head">{km(4, 'Izdvojeno')}<h2 id="rec-t" class="d2" data-split>Naša preporuka</h2>
   <a class="more" href="gume.html">Pogledajte sve gume {icon('arrow')}</a></div>
@@ -279,7 +269,7 @@ def visit():
  <h3>{t}</h3><p>{a}<br>{c}</p>
  <ul class="hours">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in hrs)}</ul>
  <p class="fine">{note}</p>
- <a class="more" href="{maps}" rel="noopener">Putanja {icon('arrow-ne')}</a></article>'''  # noqa: E731
+ <a class="more" href="{maps}" rel="noopener">Kako do nas {icon('arrow-ne')}</a></article>'''  # noqa: E731
     return f'''
 <section class="visit" aria-labelledby="visit-t"><div class="wrap visit__grid">
  <div class="visit__call">

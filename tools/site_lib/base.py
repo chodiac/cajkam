@@ -14,6 +14,15 @@ DATA = ROOT / 'data'
 UPLOADS = 'https://cajkam.rs/wp-content/uploads/'
 
 PRODUCTS = json.loads((DATA / 'products.json').read_text(encoding='utf-8'))
+# No promotions at the moment (client, 2026-10-23): show the regular price and no
+# discount anywhere. Set PROMOTIONS = True to bring sale prices back from the shop data.
+PROMOTIONS = False
+if not PROMOTIONS:
+    for _p in PRODUCTS:
+        if 'r' in _p and not _p.get('np') and 0 < _p['p'] < _p['r']:
+            _p['p'] = _p['r']
+        if not _p.get('np'):
+            _p.pop('r', None)
 POSTS = json.loads((DATA / 'posts.json').read_text(encoding='utf-8'))
 PAGES = json.loads((DATA / 'pages.json').read_text(encoding='utf-8'))
 BRANDS = json.loads((DATA / 'brands.json').read_text(encoding='utf-8'))
@@ -444,7 +453,7 @@ def footer(Rp):
 <footer class="ftr">
  <div class="wrap">
   <section class="ftr__news" aria-labelledby="nl-title">
-   <div><p class="label label--light">Newsletter</p><h2 id="nl-title" class="d3">5 % popusta na prvu kupovinu</h2>
+   <div><p class="label label--light">Newsletter</p><h2 id="nl-title" class="d3">Budite prvi koji saznaju</h2>
    <p>Prijavite se i prvi saznajte za nove akcije, ponude i savete o održavanju guma.</p></div>
    <form class="ftr__form" data-demo-form data-success="Hvala! Prijava je zabeležena.">
     <label class="sr" for="nl-email">E-mail adresa</label>
@@ -490,7 +499,7 @@ def descriptions():
     return {
         'index.html': f'Online prodaja guma Čajka M iz Čačka: gume za automobile, kombije, kamione, radne i poljoprivredne mašine. Dva servisa i hotel za gume u Čačku.',
         'gume.html': f'Katalog guma Čajka M: gume za automobile, kombije, kamione, viljuškare i traktore. Filtrirajte po dimenziji, sezoni, proizvođaču i ceni.',
-        'akcije.html': f'Gume na akciji u Čajka M: modeli sa sniženom cenom, do {MAX_DISCOUNT} % popusta. Cene po komadu sa PDV-om, dostava 1-3 radna dana.',
+        'akcije.html': 'Akcije Čajka M: trenutno nema guma na akciji. Pogledajte celu ponudu guma ili nas pozovite za ponudu.',
         'servis.html': 'Guma Servis u Čačku, Dr. Dragiše Mišovića 100: montaža i balansiranje od 400 RSD, reglaža trapa, vulkanizerske usluge i brzi servis. Zakažite termin.',
         'hotel-za-gume.html': 'Hotel za gume u Čačku: čuvanje guma svih vrsta i veličina, 600 RSD po komadu za jednu sezonu, uz montažu i balansiranje u Guma Servisu.',
         'brendovi.html': 'Brendovi guma u ponudi Čajka M: Continental, Goodyear, Michelin, Sava, Tigar i drugi. Ovlašćeni uvoznik brendova Speedways i Tourador.',

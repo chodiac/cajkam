@@ -106,8 +106,7 @@ function renderFacets() {
 
   const openState = Object.fromEntries($$('.fgroup', facetsBox).map((g) => [g.dataset.group, g.open]));
   facetsBox.innerHTML = [
-    group('dost', 'Dostupnost', `<label class="switch"><span>Samo na stanju</span><input type="checkbox" data-k="stanje"${state.stanje ? ' checked' : ''}></label>
-      ${preset.has('akcija') ? '' : `<label class="switch"><span>Samo na akciji</span><input type="checkbox" data-k="akcija"${state.akcija ? ' checked' : ''}></label>`}`),
+    group('dost', 'Dostupnost', `<label class="switch"><span>Samo na stanju</span><input type="checkbox" data-k="stanje"${state.stanje ? ' checked' : ''}></label>`),
     group('tip', 'Tip gume', options('tip', tipE, CATS)),
     group('brend', 'Proizvođač', `<input class="fgroup__search" type="search" placeholder="Pronađi proizvođača" aria-label="Pronađi proizvođača" data-brand-q value="${esc(brandQuery)}">
       ${options('brend', brShown)}${!brandQuery && brE.length > 8 ? `<button type="button" class="fgroup__more" data-brand-all>${brandAll ? 'Prikaži manje' : `Prikaži sve (${brE.length})`}</button>` : ''}`),

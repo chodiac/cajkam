@@ -244,8 +244,25 @@ def account_page():
     return page('nalog.html', 'Moj nalog — Čajka M', body, scripts=('account',), cls='is-shop')
 
 
+def promotions_page():
+    """Akcije stays in the menu; while there are no promotions it says so plainly."""
+    if ON_SALE:
+        return catalog('akcije.html', 'Akcije', preset='akcija=1', active='akcije', label='Na popustu', no=3,
+                       lede=f'Modeli na popustu - sniženja do {MAX_DISCOUNT} %. Cene su po komadu, sa PDV-om.')
+    body = f'''{page_head('Akcije', 'Trenutno nema guma na akciji.', label='Akcije')}
+<section class="sec sec--tight"><div class="wrap">
+ <div class="empty empty--promo">
+  <p class="label">Uskoro</p>
+  <h2 class="d3">Trenutno nema aktuelnih akcija</h2>
+  <p>Nove akcije objavljujemo ovde i u newsletteru. Do tada pogledajte celu ponudu ili nas pozovite - rado ćemo vam dati ponudu za vašu dimenziju.</p>
+  <div class="empty__cta"><a class="btn btn--go" href="gume.html"><span>Pogledaj sve gume</span>{icon('arrow')}</a>
+   <a class="btn btn--line" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>{BIZ['phone']}</span></a></div>
+ </div>
+</div></section>'''
+    return page('akcije.html', 'Akcije | Čajka M', body, active='akcije')
+
+
 def all_pages():
     return [catalog('gume.html', 'Gume', lede='Gume za putnička, poluteretna, teretna, industrijska i poljoprivredna vozila.'),
-            catalog('akcije.html', 'Akcije', preset='akcija=1', active='akcije', label='Na popustu', no=3,
-                    lede=f'Modeli na popustu - sniženja do {MAX_DISCOUNT} %. Cene su po komadu, sa PDV-om.'),
+            promotions_page(),
             product_page(), cart_page(), checkout_page(), compare_page(), account_page()]

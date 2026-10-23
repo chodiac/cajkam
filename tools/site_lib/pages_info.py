@@ -78,7 +78,7 @@ def service_page():
    <p class="fine">{BIZ['service_services']}</p>
    <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['service_hours'])}</ul>
    <a class="btn btn--go btn--block" href="?servis=guma-servis#zakazivanje" data-book-at="guma-servis"><span>Zakažite termin</span>{icon('arrow')}</a>
-   <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Putanja</span></a>
+   <a class="btn btn--line-light btn--block" href="{BIZ['maps_service']}" rel="noopener">{icon('pin')}<span>Kako do nas</span></a>
   </div>
   <div class="box box--ink">
    {photo('konjevici-zgrada', 'Čajka M, Bulevar oslobodilaca Čačka 84, Konjevići', '16/10', 'photo--box', '320px', reveal=False)}
@@ -87,7 +87,7 @@ def service_page():
    <p class="fine">Vulkanizerske usluge za putnička i teretna vozila i mehaničarske usluge.</p>
    <ul class="hours hours--light">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in BIZ['hours'])}</ul>
    <a class="btn btn--go btn--block" href="?servis=konjevici#zakazivanje" data-book-at="konjevici"><span>Zakažite termin</span>{icon('arrow')}</a>
-   <a class="btn btn--line-light btn--block" href="{BIZ['maps_hq']}" rel="noopener">{icon('pin')}<span>Putanja</span></a>
+   <a class="btn btn--line-light btn--block" href="{BIZ['maps_hq']}" rel="noopener">{icon('pin')}<span>Kako do nas</span></a>
   </div>
   <a class="btn btn--line btn--block" href="tel:{BIZ['phone_href']}">{icon('phone')}<span>{BIZ['phone']} · opcija 3</span></a>
  </aside>
@@ -221,7 +221,7 @@ def contact_page():
  <div class="loc__map"><iframe src="{emb}" title="Mapa: {t}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
  <div class="loc__body"><h3 class="d3">{t}</h3><p>{a}<br>{c}</p>
  <ul class="hours">{''.join(f'<li><span>{d}</span><b>{h}</b></li>' for d, h in hrs)}</ul>{note}
- <a class="btn btn--line btn--sm" href="{maps}" rel="noopener">{icon('pin')}<span>Putanja</span></a></div></article>'''
+ <a class="btn btn--line btn--sm" href="{maps}" rel="noopener">{icon('pin')}<span>Kako do nas</span></a></div></article>'''
     body = f'''{page_head('Kontakt', 'Pozovite nas, pišite nam ili dođite — kolege iz maloprodaje će vas uslužiti.', label='Kontakt')}
 <section class="sec sec--tight"><div class="wrap contact">
  <div class="contact__cards">
