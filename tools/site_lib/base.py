@@ -89,7 +89,14 @@ SERVICE_PRICES = [
         ('Krpljenje tubeles pneumatika za putničko vozilo (čepom)', 500),
         ('Krpljenje tubeles pneumatika za putničko vozilo flekom', 800), ('Krpljenje pneumatika (komplet)', 1000),
         ('Zamena tubeles ventila bez gume', 300), ('Zamena tubeles ventila sa gumom', 400),
-        ('Hotel za gume (po komadu)', 600), ('Prelepljivanje', 500)]),
+        ('Hotel za gume (po komadu)', 600), ('Prelepljivanje', 500),
+        ('Izlazak na teren - putnička guma', 1000), ('Izlazak na teren - poluteretna/teretna guma', 10000)]),
+    ('Teretni program', [
+        ('Skidanje/nameštanje točka kamiona do 17,5"', 500), ('Demontaža/montaža pneumatika do 17,5"', 800),
+        ('Balansiranje pneumatika do 17,5"', 800), ('Skidanje/nameštanje točka kamiona od 19,5" do 22,5"', 800),
+        ('Demontaža/montaža pneumatika od 19,5" do 22,5"', 1000), ('Balansiranje pneumatika od 19,5" do 22,5"', 1000),
+        ('Demontaža/montaža pneumatika od 20"', 2500), ('Skidanje/nameštanje točka kamiona od 20"', 800),
+        ('Demontaža/montaža pneumatika skipa', 4000), ('Skidanje/nameštanje točka skipa', 1000)]),
     ('Balansiranje', [
         ('Do 16"', 400), ('Od 17"', 450), ('Od 18"', 500), ('Džip', 500), ('Poluteretni program', 600),
         ('Alu felna do 16", samolepljivi teg', 400), ('Alu felna od 17", samolepljivi teg', 450),
@@ -98,7 +105,7 @@ SERVICE_PRICES = [
     ('Reglaža', [
         ('Pregled mehaničke ispravnosti trapa', 1000), ('Kontrola geometrije i korekcija trapa — putničko vozilo', 2500),
         ('Kontrola geometrije i korekcija trapa — džip', 2800), ('Kontrola geometrije i korekcija trapa — kombi', 3000),
-        ('Zamena krajeva spona', 100), ('Zamena jabučica', 1200), ('Rad mehaničara 1h', 2000),
+        ('Zamena krajeva spona', 1000), ('Zamena jabučica', 1200), ('Rad mehaničara 1h', 2000),
         ('Rad mehaničara ½h', 1000)]),
     ('Brzi servis', [
         ('Zamena ulja i filtera ulja', 'rad mehaničara'), ('Poliranje farova', 2000),
